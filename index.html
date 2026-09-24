@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Receitly</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --paper:#F7F7F9;
+    --surface:#FFFFFF;
+    --surface-sunken:#F0F0F3;
+    --ink:#17161B;
+    --ink-muted:#6A6A72;
+    --ink-faint:#9C9CA3;
+    --line:#E5E5EA;
+    --pink:#E22456; --pink-soft:#FFE7ED;
+    --blue:#3457E0; --blue-soft:#E8EDFF;
+    --purple:#6B35DE; --purple-soft:#F1E9FE;
+    --good:#17A673; --good-soft:#E1F7EE;
+    --warning:#B4650A; --warning-soft:#FFEBD1;
+    --critical:#E0222C; --critical-soft:#FFE1E2;
+    --brand-gradient:linear-gradient(120deg,#FF609C,#406CFF);
+    --radius-s:10px; --radius-m:16px;
+    --shadow-card:0 1px 2px rgba(23,22,27,.05), 0 10px 28px -16px rgba(23,22,27,.16);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141420; --surface:#1C1C28; --surface-sunken:#202028;
+      --ink:#F3F1F7; --ink-muted:#ABA9B5; --ink-faint:#726F80; --line:#2C2B3A;
+      --pink:#FF6B8A; --pink-soft:#3A1F2B;
+      --blue:#8FA6FF; --blue-soft:#1E2440;
+      --purple:#B08CFC; --purple-soft:#2A2140;
+      --good:#35C08C; --good-soft:#10251D;
+      --warning:#E4A542; --warning-soft:#2E2011;
+      --critical:#FF6169; --critical-soft:#35171A;
+      --brand-gradient:linear-gradient(120deg,#FF7FA6,#6E8CFF);
+      --shadow-card:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -16px rgba(0,0,0,.5);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141420; --surface:#1C1C28; --surface-sunken:#202028;
+    --ink:#F3F1F7; --ink-muted:#ABA9B5; --ink-faint:#726F80; --line:#2C2B3A;
+    --pink:#FF6B8A; --pink-soft:#3A1F2B;
+    --blue:#8FA6FF; --blue-soft:#1E2440;
+    --purple:#B08CFC; --purple-soft:#2A2140;
+    --good:#35C08C; --good-soft:#10251D;
+    --warning:#E4A542; --warning-soft:#2E2011;
+    --critical:#FF6169; --critical-soft:#35171A;
+    --brand-gradient:linear-gradient(120deg,#FF7FA6,#6E8CFF);
+    --shadow-card:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -16px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Plus Jakarta Sans",-apple-system,"Segoe UI",sans-serif;
+    padding-inline:16px; padding-block:16px 40px;
+    display:flex; justify-content:center;
+  }
+  a{color:inherit;}
+  .num{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums;}
+  .shell{width:100%; max-width:1360px; display:flex; gap:22px; align-items:flex-start;}
+  .main{flex:1; min-width:0; display:flex; flex-direction:column; gap:18px;}
+
+  /* ---- sidebar ---- */
+  .sidebar{
+    width:224px; flex-shrink:0; position:sticky; top:16px;
+    display:flex; flex-direction:column; gap:18px;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);
+    padding:18px 14px; box-shadow:var(--shadow-card);
+  }
+  .brand{display:flex; align-items:center; gap:10px; padding:0 6px;}
+  .brand-mark{
+    width:32px;height:32px;border-radius:9px; background:var(--brand-gradient);
+    color:#fff; display:flex;align-items:center;justify-content:center;
+    font-family:"IBM Plex Mono"; font-weight:700; font-size:14px; flex-shrink:0;
+  }
+  .brand-name{font-weight:800; font-size:17px; letter-spacing:-0.01em;}
+  .navlist{display:flex; flex-direction:column; gap:2px;}
+  .navlink{
+    display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px;
+    font-size:13.5px; font-weight:600; color:var(--ink-muted); text-decoration:none;
+  }
+  .navlink svg{width:16px;height:16px; flex-shrink:0;}
+  .navlink:hover{background:var(--surface-sunken); color:var(--ink);}
+  .navlink[aria-current="page"]{background:var(--pink-soft); color:var(--pink);}
+  .nav-eco{
+    margin-top:auto; display:flex; gap:8px; align-items:flex-start; font-size:11.5px;
+    color:var(--ink-muted); background:var(--surface-sunken); border-radius:10px; padding:10px;
+  }
+  .nav-eco svg{width:14px;height:14px; color:var(--good); flex-shrink:0; margin-top:1px;}
+  .nav-eco b{color:var(--ink); display:block; font-size:12.5px;}
+
+  /* ---- mobile nav ---- */
+  .mobilebar{display:none;}
+  .mobilenav{display:none;}
+
+  /* ---- top header ---- */
+  .header{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .greet-title{font-size:19px; font-weight:800; letter-spacing:-.01em;}
+  .greet-sub{font-size:12.5px; color:var(--ink-muted); margin-top:2px;}
+  .header-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .segmented{display:flex; background:var(--surface-sunken); border-radius:999px; padding:3px; gap:2px;}
+  .segmented button{
+    border:none; background:transparent; font:inherit; font-size:12.5px; font-weight:700;
+    color:var(--ink-muted); padding:7px 14px; border-radius:999px; cursor:pointer;
+  }
+  .segmented button.active{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-card);}
+  .month-pill{
+    font-size:12.5px; font-weight:600; background:var(--surface); border:1px solid var(--line);
+    padding:8px 13px; border-radius:999px; color:var(--ink); display:flex; align-items:center; gap:6px;
+  }
+  .month-pill svg{width:13px;height:13px;flex-shrink:0;}
+  .avatar{
+    width:34px;height:34px;border-radius:50%; background:var(--brand-gradient); color:#fff;
+    display:flex;align-items:center;justify-content:center; font-weight:700; font-size:12.5px; flex-shrink:0;
+  }
+
+  /* ---- receipt inbox strip ---- */
+  .inbox{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);
+    padding:13px 18px; box-shadow:var(--shadow-card);
+  }
+  .inbox-icon{
+    width:36px;height:36px;border-radius:9px; background:var(--purple-soft); color:var(--purple);
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  .inbox-icon svg{width:18px;height:18px;}
+  .inbox-text{flex:1; min-width:180px; font-size:13px;}
+  .inbox-text b{font-weight:700;}
+  .inbox-text span{color:var(--ink-muted); display:block; font-size:12px; margin-top:1px;}
+  .btn-add{
+    border:none; background:var(--pink); color:#fff; font-weight:700; font-size:13px;
+    padding:9px 16px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .btn-add svg{width:14px;height:14px;}
+
+  /* ---- stat tiles ---- */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .stat{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);
+    padding:16px 16px 14px; box-shadow:var(--shadow-card); display:flex; flex-direction:column; gap:7px;
+  }
+  .stat-icon{width:26px;height:26px;border-radius:7px; display:flex;align-items:center;justify-content:center; margin-bottom:2px;}
+  .stat-icon svg{width:14px;height:14px;}
+  .stat-label{font-size:12px; color:var(--ink-muted); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  .stat-value{font-family:"IBM Plex Mono"; font-size:22px; font-weight:600;}
+  .stat-delta{font-size:12px; display:flex; align-items:center; gap:4px; font-weight:600;}
+  .stat-delta.up{color:var(--critical);} .stat-delta.down{color:var(--good);} .stat-delta.flat{color:var(--ink-muted); font-weight:500;}
+  .stat-delta svg{width:11px;height:11px;}
+
+  /* ---- section shell ---- */
+  section{scroll-margin-top:16px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);
+    box-shadow:var(--shadow-card); padding:20px; position:relative;
+  }
+  section:target .card{box-shadow:0 0 0 2px var(--pink), var(--shadow-card);}
+  .card-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .card-title{font-size:15.5px; font-weight:700; letter-spacing:-.005em;}
+  .card-sub{font-size:12.5px; color:var(--ink-muted);}
+  .link{font-size:12.5px; font-weight:700; color:var(--blue); text-decoration:none; white-space:nowrap;}
+  .link:hover{text-decoration:underline;}
+  .link:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible{outline:2px solid var(--pink); outline-offset:2px;}
+
+  /* ---- AI panel ---- */
+  .ai-panel{background:linear-gradient(160deg, var(--purple-soft), var(--surface) 68%); border:1px solid var(--line);}
+  .ai-head{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .ai-badge{
+    width:30px;height:30px;border-radius:9px; background:var(--brand-gradient); color:#fff;
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  .ai-badge svg{width:16px;height:16px;}
+  .ai-title{font-weight:700; font-size:15.5px;}
+  .ai-title span{display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted); margin-top:1px;}
+  .ai-insights{display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
+  .ai-insight{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; line-height:1.5;}
+  .ai-insight svg{width:15px;height:15px; flex-shrink:0; margin-top:2px; color:var(--purple);}
+  .ai-insight b{font-weight:700;}
+  .ai-insight .g{color:var(--good); font-weight:700;}
+  .ai-insight .c{color:var(--critical); font-weight:700;}
+  .ai-ask{display:flex; gap:8px; margin-bottom:10px;}
+  .ai-ask input{
+    flex:1; min-width:0; border:1px solid var(--line); background:var(--surface);
+    border-radius:999px; padding:10px 16px; font:inherit; font-size:13.5px; color:var(--ink);
+  }
+  .ai-ask input::placeholder{color:var(--ink-faint);}
+  .ai-ask button{
+    border:none; background:var(--pink); color:#fff; font-weight:700;
+    font-size:13.5px; padding:10px 18px; border-radius:999px; cursor:pointer; white-space:nowrap;
+  }
+  .ai-chips{display:flex; gap:8px; flex-wrap:wrap;}
+  .ai-chip{
+    font-size:12.5px; border:1px solid var(--line); background:var(--surface);
+    color:var(--ink-muted); padding:6px 12px; border-radius:999px; cursor:pointer;
+  }
+  .ai-chip:hover{border-color:var(--pink); color:var(--pink);}
+
+  /* ---- trend chart ---- */
+  .trend-card .card-head{margin-bottom:6px;}
+  #trend-chart{width:100%;}
+  #trend-chart svg{width:100%; height:180px; display:block; overflow:visible;}
+  .trend-area{fill:var(--pink-soft); opacity:.75;}
+  .trend-line{fill:none; stroke:var(--pink); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round;}
+  .trend-grid{stroke:var(--line); stroke-width:1;}
+  .trend-dot{fill:var(--surface); stroke:var(--pink); stroke-width:2;}
+  .trend-dot.end{fill:var(--pink); stroke:none;}
+  .trend-hit{fill:transparent; cursor:pointer;}
+  .trend-label{fill:var(--ink-muted); font-size:11px; font-family:"Plus Jakarta Sans",sans-serif;}
+  .trend-value{fill:var(--ink); font-size:12.5px; font-weight:700; font-family:"IBM Plex Mono",monospace;}
+  .chart-tip{
+    position:absolute; display:none; background:var(--ink); color:var(--paper); font-size:11.5px; font-weight:700;
+    padding:6px 10px; border-radius:7px; pointer-events:none; white-space:nowrap; transform:translate(-50%,-125%); z-index:5;
+  }
+
+  /* ---- layout grid ---- */
+  .layout{display:grid; grid-template-columns:1.7fr 1fr; gap:16px; align-items:start;}
+  .layout-even{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+  .col{display:flex; flex-direction:column; gap:16px;}
+
+  /* ---- bar rows (magnitude, single hue) ---- */
+  .bar-list{display:flex; flex-direction:column; gap:12px;}
+  .bar-row-top{display:flex; justify-content:space-between; align-items:baseline; font-size:13.5px; margin-bottom:5px; gap:8px;}
+  .bar-row-name{font-weight:600;}
+  .bar-row-meta{color:var(--ink-muted); font-weight:500; font-size:12px; margin-left:6px;}
+  .bar-track{height:8px; border-radius:5px; background:var(--surface-sunken); overflow:hidden; position:relative;}
+  .bar-fill{height:100%; border-radius:5px; background:var(--pink);}
+  .bar-fill.good{background:var(--good);} .bar-fill.warning{background:var(--warning);} .bar-fill.critical{background:var(--critical);}
+  .bar-total{display:flex; justify-content:space-between; padding-top:12px; margin-top:2px; border-top:1px solid var(--line); font-size:13px; font-weight:700;}
+
+  /* ---- budgets ---- */
+  .budget-row{display:flex; flex-direction:column; gap:6px;}
+  .budget-top{display:flex; justify-content:space-between; align-items:baseline; font-size:13.5px; gap:8px;}
+  .budget-name{font-weight:600;}
+  .budget-amt .ink-muted{color:var(--ink-muted); font-weight:500;}
+  .budget-foot{display:flex; justify-content:flex-end;}
+
+  /* ---- merchant marks (transactions + loyalty) ---- */
+  .merchant-mark{
+    width:36px;height:36px;border-radius:10px; flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--surface); border:1px solid var(--line);
+  }
+  .merchant-mark svg{width:19px;height:19px;}
+  .merchant-mark.sm{width:30px;height:30px;border-radius:9px;}
+  .merchant-mark.sm svg{width:15px;height:15px;}
+  .loy-mark.merchant-mark{width:38px;height:38px;}
+  .loy-mark.merchant-mark svg{width:20px;height:20px;}
+  .item-top-left{display:flex; gap:10px; align-items:flex-start;}
+
+  /* ---- transactions ---- */
+  .txn-list{display:flex; flex-direction:column;}
+  .txn-row{
+    display:flex; align-items:center; gap:12px; padding:11px 8px; margin:0 -8px; border-bottom:1px solid var(--line);
+    border-radius:9px; cursor:pointer;
+  }
+  .txn-row:last-child{border-bottom:none;}
+  .txn-row:hover, .txn-row:focus-visible{background:var(--surface-sunken);}
+  .txn-mid{flex:1; min-width:0;}
+  .txn-store{font-weight:600; font-size:13.5px;}
+  .txn-meta{font-size:12px; color:var(--ink-muted); margin-top:1px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+  .tag{background:var(--blue-soft); color:var(--blue); font-weight:700; padding:1px 8px; border-radius:999px; font-size:11px;}
+  .txn-amt{font-family:"IBM Plex Mono"; font-weight:600; font-size:13.5px; white-space:nowrap; text-align:right;}
+  .txn-chevron{color:var(--ink-faint); flex-shrink:0; width:15px; height:15px;}
+
+  /* ---- pills ---- */
+  .pill{font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;}
+  .pill.good{background:var(--good-soft); color:var(--good);}
+  .pill.warning{background:var(--warning-soft); color:var(--warning);}
+  .pill.critical{background:var(--critical-soft); color:var(--critical);}
+  .pill.info{background:var(--blue-soft); color:var(--blue);}
+  .pill svg{width:9px;height:9px;}
+
+  /* ---- warranty / return items ---- */
+  .item-list{display:flex; flex-direction:column; gap:12px;}
+  .item{display:flex; flex-direction:column; gap:5px; padding-bottom:12px; border-bottom:1px solid var(--line);}
+  .item:last-child{border-bottom:none; padding-bottom:0;}
+  .item-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .item-name{font-weight:600; font-size:13.5px;}
+  .item-sub{font-size:12px; color:var(--ink-muted); margin-top:1px;}
+  .item-note{font-size:12px; color:var(--ink-muted);}
+  .item-note b{color:var(--ink); font-family:"IBM Plex Mono"; font-weight:600;}
+  .item-actions{display:flex; gap:8px; margin-top:2px;}
+  .mini-btn{
+    border:1px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-size:11.5px;
+    font-weight:700; padding:6px 11px; border-radius:999px; cursor:pointer;
+  }
+  .mini-btn:hover{border-color:var(--pink); color:var(--pink);}
+  .mini-btn.solid{background:var(--pink); border-color:var(--pink); color:#fff;}
+
+  /* ---- loyalty cards ---- */
+  .loy-list{display:flex; flex-direction:column; gap:10px;}
+  .loy-card{display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--surface-sunken);}
+  .loy-mid{flex:1; min-width:0;}
+  .loy-name{font-weight:600; font-size:13px;}
+  .loy-tier{font-size:11.5px; color:var(--ink-muted); margin-top:1px;}
+  .loy-pts{font-family:"IBM Plex Mono"; font-weight:700; font-size:14px; text-align:right; white-space:nowrap;}
+  .loy-pts span{display:block; font-family:"Plus Jakarta Sans"; font-weight:500; font-size:10.5px; color:var(--ink-muted); text-transform:uppercase; letter-spacing:.04em;}
+
+  /* ---- rewards ---- */
+  .reward{padding-bottom:12px; border-bottom:1px solid var(--line);}
+  .reward:last-child{border-bottom:none; padding-bottom:0;}
+  .reward-top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;}
+  .reward-name{font-weight:600; font-size:13px;}
+  .reward-track{height:6px; border-radius:4px; background:var(--surface-sunken); overflow:hidden;}
+  .reward-fill{height:100%; border-radius:4px; background:var(--good);}
+  .reward-meta{font-size:11.5px; color:var(--ink-muted); margin-top:5px;}
+
+  /* ---- split bills ---- */
+  .bill{padding-bottom:13px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:6px;}
+  .bill:last-child{border-bottom:none; padding-bottom:0;}
+  .bill-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .bill-name{font-weight:600; font-size:13.5px;}
+  .bill-sub{font-size:12px; color:var(--ink-muted); margin-top:1px;}
+  .bill-amt{font-family:"IBM Plex Mono"; font-weight:700; font-size:13.5px; text-align:right;}
+  .bill-amt.owed{color:var(--good);} .bill-amt.owe{color:var(--critical);}
+  .bill-foot{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .bill-progress{font-size:11.5px; color:var(--ink-muted);}
+  .split-summary{display:flex; gap:18px; padding:12px 14px; background:var(--surface-sunken); border-radius:var(--radius-s); margin-bottom:14px; font-size:12.5px; flex-wrap:wrap;}
+  .split-summary b{font-family:"IBM Plex Mono";}
+  .good-text{color:var(--good);} .critical-text{color:var(--critical);}
+
+  /* ---- reimbursements ---- */
+  .re-row{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line);}
+  .re-row:last-child{border-bottom:none; padding-bottom:0;}
+  .re-mid{flex:1; min-width:0;}
+  .re-name{font-weight:600; font-size:13.5px;}
+  .re-meta{font-size:12px; color:var(--ink-muted); margin-top:1px;}
+  .re-right{display:flex; flex-direction:column; align-items:flex-end; gap:5px;}
+  .re-amt{font-family:"IBM Plex Mono"; font-weight:600; font-size:13.5px;}
+  .re-total{display:flex; justify-content:space-between; align-items:center; padding-top:13px; margin-top:2px; border-top:1px solid var(--line);}
+  .re-total-label{font-size:13px; font-weight:700;}
+  .btn-export{
+    border:1px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-size:12.5px;
+    font-weight:700; padding:8px 14px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:6px;
+  }
+  .btn-export:hover{border-color:var(--blue); color:var(--blue);}
+  .btn-export svg{width:13px;height:13px;}
+
+  /* ---- eco impact ---- */
+  .eco-card{background:var(--brand-gradient); border:none; color:#fff; display:flex; align-items:center; gap:24px; flex-wrap:wrap; padding:22px 24px;}
+  .eco-text{flex:1; min-width:220px;}
+  .eco-title{font-size:16px; font-weight:800; margin-bottom:3px;}
+  .eco-sub{font-size:12.5px; opacity:.9;}
+  .eco-stats{display:flex; gap:26px; flex-wrap:wrap;}
+  .eco-stat{display:flex; flex-direction:column; gap:2px;}
+  .eco-stat b{font-family:"IBM Plex Mono"; font-size:20px; font-weight:700;}
+  .eco-stat span{font-size:11.5px; opacity:.85;}
+
+  /* ---- transaction detail modal ---- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(15,14,20,.5); display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:50; opacity:0; pointer-events:none; transition:opacity .15s ease;
+  }
+  .modal-overlay.open{opacity:1; pointer-events:auto;}
+  .modal{
+    background:var(--surface); border-radius:var(--radius-m); max-width:420px; width:100%; max-height:85vh;
+    overflow:auto; box-shadow:0 24px 60px rgba(0,0,0,.28); transform:translateY(10px) scale(.98); transition:transform .15s ease;
+  }
+  .modal-overlay.open .modal{transform:translateY(0) scale(1);}
+  .modal-head{display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid var(--line);}
+  .modal-head .merchant-mark{width:42px; height:42px;}
+  .modal-head .merchant-mark svg{width:22px;height:22px;}
+  .modal-head-text{flex:1; min-width:0;}
+  .modal-store{font-weight:800; font-size:15.5px;}
+  .modal-meta{font-size:12px; color:var(--ink-muted); margin-top:2px;}
+  .modal-close{
+    border:none; background:var(--surface-sunken); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-muted); flex-shrink:0;
+  }
+  .modal-close svg{width:15px;height:15px;}
+  .modal-body{padding:14px 20px 6px;}
+  .modal-items{display:flex; flex-direction:column;}
+  .modal-item-row{display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line); font-size:13px;}
+  .modal-item-row:last-child{border-bottom:none;}
+  .modal-item-qty{color:var(--ink-muted); font-size:11.5px; margin-left:4px;}
+  .modal-total{display:flex; justify-content:space-between; padding-top:12px; margin-top:4px; border-top:1px solid var(--line); font-weight:800; font-size:14.5px;}
+  .modal-foot{display:flex; flex-direction:column; gap:10px; padding:14px 20px 20px;}
+  .modal-pay{font-size:12.5px; color:var(--ink-muted); display:flex; justify-content:space-between;}
+  .modal-note{font-size:12.5px; background:var(--purple-soft); color:var(--purple); padding:9px 12px; border-radius:9px; display:flex; gap:8px; align-items:flex-start; text-decoration:none; font-weight:600;}
+  .modal-note svg{width:14px;height:14px; flex-shrink:0; margin-top:1px;}
+  .modal-actions{display:flex; gap:8px;}
+  .modal-actions button{flex:1;}
+
+  @media (max-width:900px){
+    .sidebar{display:none;}
+    .mobilebar{display:flex;}
+    .mobilenav{display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch;}
+    .mobilenav::-webkit-scrollbar{display:none;}
+    .mobilenav a{
+      flex-shrink:0; font-size:12.5px; font-weight:700; color:var(--ink-muted); text-decoration:none;
+      background:var(--surface); border:1px solid var(--line); padding:8px 13px; border-radius:999px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .mobilenav a svg{width:13px;height:13px;}
+    .shell{flex-direction:column;}
+    .layout, .layout-even{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:520px){
+    .stat-value{font-size:19px;}
+    .ai-ask{flex-direction:column;} .ai-ask button{width:100%;}
+    .split-summary{gap:10px 18px;}
+  }
+</style>
+
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">R</div>
+      <div class="brand-name">receitly</div>
+    </div>
+    <nav class="navlist">
+      <a class="navlink" href="#overview" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Overview</a>
+      <a class="navlink" href="#budgets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Budgets</a>
+      <a class="navlink" href="#transactions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Transactions</a>
+      <a class="navlink" href="#warranties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>Warranties</a>
+      <a class="navlink" href="#returns"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-1"/></svg>Returns</a>
+      <a class="navlink" href="#loyalty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.3l-5.5 3 1.4-6L3 9.8l6.1-.5L12 3.5l2.9 5.8 6.1.5-4.9 4.5 1.4 6z"/></svg>Loyalty &amp; rewards</a>
+      <a class="navlink" href="#split-bills"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M14.5 15.2c2.3.3 4 2 4 4.8"/></svg>Split bills</a>
+      <a class="navlink" href="#reimbursements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13l2 2 4-4"/></svg>Reimbursements</a>
+      <a class="navlink" href="#eco-impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-1-7-5-7-10 3 0 6 1 7 4 1-3 4-4 7-4 0 5-3 9-7 10z"/></svg>Eco impact</a>
+    </nav>
+    <div class="nav-eco">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-1-7-5-7-10 3 0 6 1 7 4 1-3 4-4 7-4 0 5-3 9-7 10z"/></svg>
+      <div><b>142 receipts</b> gone paperless this month</div>
+    </div>
+  </aside>
+
+  <div class="main">
+
+    <div class="mobilebar">
+      <div class="brand"><div class="brand-mark">R</div><div class="brand-name">receitly</div></div>
+    </div>
+    <nav class="mobilenav">
+      <a href="#overview">Overview</a><a href="#budgets">Budgets</a><a href="#transactions">Transactions</a>
+      <a href="#warranties">Warranties</a><a href="#returns">Returns</a><a href="#loyalty">Loyalty</a>
+      <a href="#split-bills">Split bills</a><a href="#reimbursements">Reimbursements</a><a href="#eco-impact">Eco impact</a>
+    </nav>
+
+    <section id="overview" style="display:flex; flex-direction:column; gap:18px;">
+
+      <div class="header">
+        <div>
+          <div class="greet-title">Good evening, Meera</div>
+          <div class="greet-sub">Here's what your receipts say about September</div>
+        </div>
+        <div class="header-right">
+          <div class="segmented" role="tablist" aria-label="Expense view">
+            <button type="button" class="active" id="tab-personal" role="tab" aria-selected="true">Personal</button>
+            <button type="button" id="tab-business" role="tab" aria-selected="false">Business</button>
+          </div>
+          <div class="month-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            September 2026
+          </div>
+          <div class="avatar">MK</div>
+        </div>
+      </div>
+
+      <div class="inbox">
+        <div class="inbox-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg></div>
+        <div class="inbox-text"><b>12 new receipts</b> added this week<span>8 forwarded by email · 4 scanned by camera</span></div>
+        <button class="btn-add" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add receipt
+        </button>
+      </div>
+
+      <div class="stats" id="stats-grid"></div>
+
+      <div class="card trend-card">
+        <div class="card-head">
+          <div><div class="card-title">Spending trend</div><div class="card-sub" id="trend-sub">Personal · last 6 months</div></div>
+        </div>
+        <div id="trend-chart"></div>
+        <div class="chart-tip" id="trend-tip"></div>
+      </div>
+
+      <div class="card ai-panel">
+        <div class="ai-head">
+          <div class="ai-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l1.8 5.6L19 9.5l-5.2 1.9L12 17l-1.8-5.6L5 9.5l5.2-1.9z"/></svg></div>
+          <div class="ai-title">Receitly AI<span>Your receipts, explained in plain language</span></div>
+        </div>
+        <div class="ai-insights">
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Dining out is up <span class="c">18%</span> from August — mostly weekend DoorDash orders, about $35 more than usual.</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your grocery bill is <span class="g">$65 lower</span> this month — switching your staples run to Target is paying off.</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your <b>Air Fryer</b> warranty (Best Buy) closes in <span class="c">6 days</span>, and 2 loyalty cards already have enough points to redeem.</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>You're <b>$52 over</b> your dining budget and <b>$54 over</b> on shopping — want a plan to get back on track?</div>
+        </div>
+        <div class="ai-ask">
+          <input type="text" id="ai-ask-input" placeholder="Ask about your spending, warranties or rewards…">
+          <button type="button" id="ai-ask-btn">Ask</button>
+        </div>
+        <div class="ai-chips">
+          <button class="ai-chip" type="button">Why did I spend more this month?</button>
+          <button class="ai-chip" type="button">What's expiring soon?</button>
+          <button class="ai-chip" type="button">How much have I saved this year?</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="budgets">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Budgets</div><div class="card-sub">Monthly limits vs. what you've actually spent</div></div>
+          <a class="link" href="#">Edit budgets</a>
+        </div>
+        <div class="bar-list">
+          <div class="budget-row">
+            <div class="budget-top"><span class="budget-name">Groceries</span><span class="num budget-amt">$546 <span class="ink-muted">/ $550</span></span></div>
+            <div class="bar-track"><div class="bar-fill warning" style="width:99%"></div></div>
+            <div class="budget-foot"><span class="pill warning">99% used</span></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-top"><span class="budget-name">Dining out</span><span class="num budget-amt">$227 <span class="ink-muted">/ $175</span></span></div>
+            <div class="bar-track"><div class="bar-fill critical" style="width:100%"></div></div>
+            <div class="budget-foot"><span class="pill critical">30% over</span></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-top"><span class="budget-name">Shopping</span><span class="num budget-amt">$299 <span class="ink-muted">/ $245</span></span></div>
+            <div class="bar-track"><div class="bar-fill critical" style="width:100%"></div></div>
+            <div class="budget-foot"><span class="pill critical">22% over</span></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-top"><span class="budget-name">Transport &amp; fuel</span><span class="num budget-amt">$128 <span class="ink-muted">/ $140</span></span></div>
+            <div class="bar-track"><div class="bar-fill warning" style="width:91%"></div></div>
+            <div class="budget-foot"><span class="pill warning">91% used</span></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-top"><span class="budget-name">Subscriptions</span><span class="num budget-amt">$61 <span class="ink-muted">/ $70</span></span></div>
+            <div class="bar-track"><div class="bar-fill good" style="width:87%"></div></div>
+            <div class="budget-foot"><span class="pill good">On track</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <div class="col">
+
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Groceries &amp; food this month</div><div class="card-sub">$773 total · 52% of monthly spend</div></div></div>
+          <div class="bar-list">
+            <div><div class="bar-row-top"><span class="bar-row-name">Dining out <span class="bar-row-meta">DoorDash, Uber Eats</span></span><span class="num">$227</span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+            <div><div class="bar-row-top"><span class="bar-row-name">Pantry &amp; staples</span><span class="num">$209</span></div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div>
+            <div><div class="bar-row-top"><span class="bar-row-name">Produce &amp; dairy</span><span class="num">$144</span></div><div class="bar-track"><div class="bar-fill" style="width:63%"></div></div></div>
+            <div><div class="bar-row-top"><span class="bar-row-name">Meat &amp; protein</span><span class="num">$118</span></div><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div></div>
+            <div><div class="bar-row-top"><span class="bar-row-name">Snacks &amp; beverages</span><span class="num">$75</span></div><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><div class="card-title" id="cat-title">Spending by category</div><div class="card-sub" id="cat-sub">Personal · September 2026</div></div><a class="link" href="#">See all tags</a></div>
+          <div class="bar-list" id="category-bars"></div>
+        </div>
+
+        <section id="transactions">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Recent transactions</div><div class="card-sub">Tap any receipt for the full breakdown</div></div><a class="link" href="#">View all</a></div>
+          <div class="txn-list" id="txn-list"></div>
+        </div>
+        </section>
+
+      </div>
+
+      <div class="col">
+
+        <section id="warranties">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Warranties</div><a class="link" href="#">All 7</a></div>
+          <div class="item-list">
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div><div><div class="item-name">Air Fryer</div><div class="item-sub">Best Buy · bought Sep 30, 2025</div></div></div><span class="pill critical">6 days left</span></div><div class="item-note">Warranty ends <b>Sep 30, 2026</b></div></div>
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#F96302"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v5M16 3v5"/><path d="M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v3"/></svg></div><div><div class="item-name">Washing Machine</div><div class="item-sub">Home Depot · bought Oct 5, 2024</div></div></div><span class="pill warning">11 days left</span></div><div class="item-note">Warranty ends <b>Oct 5, 2026</b></div></div>
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#FF9900"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></svg></div><div><div class="item-name">Laptop</div><div class="item-sub">Amazon · bought Feb 14, 2026</div></div></div><span class="pill good">143 days left</span></div><div class="item-note">Warranty ends <b>Feb 14, 2027</b></div></div>
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div><div><div class="item-name">Wireless Earbuds</div><div class="item-sub">Best Buy · bought Sep 18, 2026</div></div></div><span class="pill good">359 days left</span></div><div class="item-note">Warranty ends <b>Sep 18, 2027</b></div></div>
+          </div>
+        </div>
+        </section>
+
+        <section id="returns">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Returns closing soon</div></div>
+          <div class="item-list">
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#E21A2C"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.015.624L9.19 9.293H0l7.445 5.384-2.819 8.673L12 17.986l7.422 5.393-2.835-8.713L24 9.292h-9.162L12.015.622v.002z"/></svg></div><div><div class="item-name">Sweater Set</div><div class="item-sub">Macy's · delivered Sep 22</div></div></div><span class="pill warning">5 days left</span></div><div class="item-note">Return window ends <b>Sep 29, 2026</b></div><div class="item-actions"><button class="mini-btn solid" type="button">Start return</button></div></div>
+            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#FF9900"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></svg></div><div><div class="item-name">Bluetooth Speaker</div><div class="item-sub">Amazon · delivered Sep 20</div></div></div><span class="pill warning">6 days left</span></div><div class="item-note">Return window ends <b>Sep 30, 2026</b></div><div class="item-actions"><button class="mini-btn solid" type="button">Start return</button></div></div>
+          </div>
+        </div>
+        </section>
+
+        <section id="loyalty">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Loyalty cards</div></div>
+          <div class="loy-list">
+            <div class="loy-card">
+              <div class="merchant-mark loy-mark" style="color:#CC0000"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.0005 0C18.627 0 24 5.373 24 12.0005 24 18.627 18.627 24 11.9995 24 5.373 24 0 18.627 0 11.9995 0 5.373 5.373 0 12.0005 0zm0 19.826a7.8265 7.8265 0 10-.001-15.652C7.7133 4.2246 4.2653 7.7136 4.2653 12c0 4.2864 3.448 7.7754 7.7342 7.826h.001zm0-3.9853a3.8402 3.8402 0 110-7.6803c2.1204.0006 3.839 1.7197 3.839 3.8401s-1.7186 3.8396-3.839 3.8402z"/></svg></div>
+              <div class="loy-mid"><div class="loy-name">Target Circle</div><div class="loy-tier">Green tier</div></div>
+              <div class="loy-pts num">1,240<span>points</span></div>
+            </div>
+            <div class="loy-card">
+              <div class="merchant-mark loy-mark" style="color:#2E77BC"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.015 14.378c0-.32-.135-.496-.344-.622-.21-.12-.464-.135-.81-.135h-1.543v2.82h.675v-1.027h.72c.24 0 .39.024.478.125.12.13.104.38.104.55v.35h.66v-.555c-.002-.25-.017-.376-.108-.516-.06-.08-.18-.18-.33-.234l.02-.008c.18-.072.48-.297.48-.747zm-.87.407l-.028-.002c-.09.053-.195.058-.33.058h-.81v-.63h.824c.12 0 .24 0 .33.05.098.048.156.147.15.255 0 .12-.045.215-.134.27zM20.297 15.837H19v.6h1.304c.676 0 1.05-.278 1.05-.884 0-.28-.066-.448-.187-.582-.153-.133-.392-.193-.73-.207l-.376-.015c-.104 0-.18 0-.255-.03-.09-.03-.15-.105-.15-.21 0-.09.017-.166.09-.21.083-.046.177-.066.272-.06h1.23v-.602h-1.35c-.704 0-.958.437-.958.84 0 .9.776.855 1.407.87.104 0 .18.015.225.06.046.03.082.106.082.18 0 .077-.035.15-.08.18-.06.053-.15.07-.277.07zM0 0v10.096L.81 8.22h1.75l.225.464V8.22h2.043l.45 1.02.437-1.013h6.502c.295 0 .56.057.756.236v-.23h1.787v.23c.307-.17.686-.23 1.12-.23h2.606l.24.466v-.466h1.918l.254.465v-.466h1.858v3.948H20.87l-.36-.6v.585h-2.353l-.256-.63h-.583l-.27.614h-1.213c-.48 0-.84-.104-1.08-.24v.24h-2.89v-.884c0-.12-.03-.12-.105-.135h-.105v1.036H6.067v-.48l-.21.48H4.69l-.202-.48v.465H2.235l-.256-.624H1.4l-.256.624H0V24h23.786v-7.108c-.27.135-.613.18-.973.18H21.09v-.255c-.21.165-.57.255-.914.255H14.71v-.9c0-.12-.018-.12-.12-.12h-.075v1.022h-1.8v-1.066c-.298.136-.643.15-.928.136h-.214v.915h-2.18l-.54-.617-.57.6H4.742v-3.93h3.61l.518.602.554-.6h2.412c.28 0 .74.03.942.225v-.24h2.177c.202 0 .644.045.903.225v-.24h3.265v.24c.163-.164.508-.24.803-.24h1.89v.24c.194-.15.464-.24.84-.24h1.176V0H0zM21.156 14.955c.004.005.006.012.01.016.01.01.024.01.032.02l-.042-.035zM23.828 13.082h.065v.555h-.065zM23.865 15.03v-.005c-.03-.025-.046-.048-.075-.07-.15-.153-.39-.215-.764-.225l-.36-.012c-.12 0-.194-.007-.27-.03-.09-.03-.15-.105-.15-.21 0-.09.03-.16.09-.204.076-.045.15-.05.27-.05h1.223v-.588h-1.283c-.69 0-.96.437-.96.84 0 .9.78.855 1.41.87.104 0 .18.015.224.06.046.03.076.106.076.18 0 .07-.034.138-.09.18-.045.056-.136.07-.27.07h-1.288v.605h1.287c.42 0 .734-.118.9-.36h.03c.09-.134.135-.3.135-.523 0-.24-.045-.39-.135-.526zM18.597 14.208v-.583h-2.235V16.458h2.235v-.585h-1.57v-.57h1.533v-.584h-1.532v-.51M13.51 8.787h.685V11.6h-.684zM13.126 9.543l-.007.006c0-.314-.13-.5-.34-.624-.217-.125-.47-.135-.81-.135H10.43v2.82h.674v-1.034h.72c.24 0 .39.03.487.12.122.136.107.378.107.548v.354h.677v-.553c0-.25-.016-.375-.11-.516-.09-.107-.202-.19-.33-.237.172-.07.472-.3.472-.75zm-.855.396h-.015c-.09.054-.195.056-.33.056H11.1v-.623h.825c.12 0 .24.004.33.05.09.04.15.128.15.25s-.047.22-.134.266zM15.92 9.373h.632v-.6h-.644c-.464 0-.804.105-1.02.33-.286.3-.362.69-.362 1.11 0 .512.123.833.36 1.074.232.238.645.31.97.31h.78l.255-.627h1.39l.262.627h1.36v-2.11l1.272 2.11h.95l.002.002V8.786h-.684v1.963l-1.18-1.96h-1.02V11.4L18.11 8.744h-1.004l-.943 2.22h-.3c-.177 0-.362-.03-.468-.134-.125-.15-.186-.36-.186-.662 0-.285.08-.51.194-.63.133-.135.272-.165.516-.165zm1.668-.108l.464 1.118v.002h-.93l.466-1.12zM2.38 10.97l.254.628H4V9.393l.972 2.205h.584l.973-2.202.015 2.202h.69v-2.81H6.118l-.807 1.904-.876-1.905H3.343v2.663L2.205 8.787h-.997L.01 11.597h.72l.26-.626h1.39zm-.688-1.705l.46 1.118-.003.002h-.915l.457-1.12zM11.856 13.62H9.714l-.85.923-.825-.922H5.346v2.82H8l.855-.932.824.93h1.302v-.94h.838c.6 0 1.17-.164 1.17-.945l-.006-.003c0-.78-.598-.93-1.128-.93zM7.67 15.853l-.014-.002H6.02v-.557h1.47v-.574H6.02v-.51H7.7l.733.82-.764.824zm2.642.33l-1.03-1.147 1.03-1.108v2.253zm1.553-1.258h-.885v-.717h.885c.24 0 .42.098.42.344 0 .243-.15.372-.42.372zM9.967 9.373v-.586H7.73V11.6h2.237v-.58H8.4v-.564h1.527V9.88H8.4v-.507"/></svg></div>
+              <div class="loy-mid"><div class="loy-name">American Express</div><div class="loy-tier">Silver tier</div></div>
+              <div class="loy-pts num">3,860<span>points</span></div>
+            </div>
+            <div class="loy-card">
+              <div class="merchant-mark loy-mark" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div>
+              <div class="loy-mid"><div class="loy-name">My Best Buy</div><div class="loy-tier">Blue tier</div></div>
+              <div class="loy-pts num">620<span>points</span></div>
+            </div>
+            <div class="loy-card">
+              <div class="merchant-mark loy-mark" style="color:#FF3008"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.071 8.409a6.09 6.09 0 00-5.396-3.228H.584A.589.589 0 00.17 6.184L3.894 9.93a1.752 1.752 0 001.242.516h12.049a1.554 1.554 0 11.031 3.108H8.91a.589.589 0 00-.415 1.003l3.725 3.747a1.75 1.75 0 001.242.516h3.757c4.887 0 8.584-5.225 5.852-10.413"/></svg></div>
+              <div class="loy-mid"><div class="loy-name">DashPass</div><div class="loy-tier">Renews Nov 2, 2026</div></div>
+              <div class="loy-pts num">Active</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-title">Rewards you can redeem</div></div>
+          <div class="item-list">
+            <div class="reward"><div class="reward-top"><span class="reward-name">$18 Amex statement credit</span><span class="pill good">Ready</span></div><div class="reward-track"><div class="reward-fill" style="width:100%"></div></div><div class="reward-meta num">3,860 / 3,000 points</div></div>
+            <div class="reward"><div class="reward-top"><span class="reward-name">$25 off at Best Buy</span><span class="pill good">Ready</span></div><div class="reward-track"><div class="reward-fill" style="width:100%"></div></div><div class="reward-meta num">620 / 500 points</div></div>
+            <div class="reward"><div class="reward-top"><span class="reward-name">Target $12 gift card</span><span class="reward-meta" style="font-size:11.5px; margin:0">260 to go</span></div><div class="reward-track"><div class="reward-fill" style="width:83%; background:var(--blue)"></div></div><div class="reward-meta num">1,240 / 1,500 points</div></div>
+          </div>
+        </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="layout-even">
+      <section id="split-bills">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Split bills</div></div>
+        <div class="split-summary"><span>You're owed <b class="good-text">$142</b></span><span>You owe <b class="critical-text">$17</b></span></div>
+        <div class="item-list">
+          <div class="bill">
+            <div class="bill-top"><div><div class="bill-name">Miami trip — hotel</div><div class="bill-sub">Split with Aditi, Rohan, Priya</div></div><div class="bill-amt owed num">+$110</div></div>
+            <div class="bill-foot"><span class="bill-progress">2 of 3 paid</span><button class="mini-btn" type="button">Remind</button></div>
+          </div>
+          <div class="bill">
+            <div class="bill-top"><div><div class="bill-name">Dinner at Cheesecake Factory</div><div class="bill-sub">Split with Rohan, Priya</div></div><div class="bill-amt owed num">+$32</div></div>
+            <div class="bill-foot"><span class="bill-progress">1 of 2 paid</span><button class="mini-btn" type="button">Remind</button></div>
+          </div>
+          <div class="bill">
+            <div class="bill-top"><div><div class="bill-name">Apartment groceries</div><div class="bill-sub">Split with Ananya</div></div><div class="bill-amt owe num">−$17</div></div>
+            <div class="bill-foot"><span class="bill-progress">Requested Sep 20</span><button class="mini-btn solid" type="button">Pay now</button></div>
+          </div>
+        </div>
+      </div>
+      </section>
+
+      <section id="reimbursements">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">Reimbursements</div><div class="card-sub">Business receipts pending your company</div></div></div>
+        <div class="re-row">
+          <div class="re-mid"><div class="re-name">Client lunch — Panera Bread</div><div class="re-meta">Sep 19 · Client meals</div></div>
+          <div class="re-right"><div class="re-amt num">$81</div><span class="pill warning">Pending</span></div>
+        </div>
+        <div class="re-row">
+          <div class="re-mid"><div class="re-name">Team dinner — Cheesecake Factory</div><div class="re-meta">Sep 14 · Client meals</div></div>
+          <div class="re-right"><div class="re-amt num">$64</div><span class="pill warning">Pending</span></div>
+        </div>
+        <div class="re-row">
+          <div class="re-mid"><div class="re-name">Uber to client site</div><div class="re-meta">Sep 17 · Travel</div></div>
+          <div class="re-right"><div class="re-amt num">$22</div><span class="pill info">Approved</span></div>
+        </div>
+        <div class="re-row">
+          <div class="re-mid"><div class="re-name">Figma subscription</div><div class="re-meta">Sep 5 · Software</div></div>
+          <div class="re-right"><div class="re-amt num">$51</div><span class="pill good">Reimbursed</span></div>
+        </div>
+        <div class="re-total">
+          <div class="re-total-label">Pending total</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="num" style="font-weight:700;">$145</span>
+            <button class="btn-export" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>Export report</button>
+          </div>
+        </div>
+      </div>
+      </section>
+    </div>
+
+    <section id="eco-impact">
+      <div class="card eco-card">
+        <div class="eco-text">
+          <div class="eco-title">Your paperless impact</div>
+          <div class="eco-sub">Every scanned or forwarded receipt skips the printed slip.</div>
+        </div>
+        <div class="eco-stats">
+          <div class="eco-stat"><b class="num">142</b><span>receipts saved</span></div>
+          <div class="eco-stat"><b class="num">1.3 lb</b><span>paper saved</span></div>
+          <div class="eco-stat"><b class="num">2.4 lb</b><span>CO₂ avoided</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-store">
+    <div class="modal-head">
+      <div class="merchant-mark" id="modal-mark"></div>
+      <div class="modal-head-text">
+        <div class="modal-store" id="modal-store"></div>
+        <div class="modal-meta" id="modal-meta"></div>
+      </div>
+      <button class="modal-close" id="modal-close" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-items" id="modal-items"></div>
+      <div class="modal-total"><span>Total paid</span><span class="num" id="modal-total"></span></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-pay"><span>Payment method</span><span class="num" id="modal-pay"></span></div>
+      <a class="modal-note" id="modal-note" href="#warranties" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>
+        <span id="modal-note-text"></span>
+      </a>
+      <div class="modal-actions">
+        <button class="mini-btn" type="button">View original receipt</button>
+        <button class="mini-btn" type="button">Flag an issue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* Custom store icons (used where no open-licensed brand mark is available) */
+  var ICONS = {
+    cart:'<path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',
+    headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/>',
+    plus:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/>'
+  };
+  /* Real brand marks — Simple Icons (simpleicons.org), CC0/MIT-licensed for exactly this use */
+  var LOGOS = {
+    netflix:'<path d="m5.398 0 8.348 23.602c2.346.059 4.856.398 4.856.398L10.113 0H5.398zm8.489 0v9.172l4.715 13.33V0h-4.715zM5.398 1.5V24c1.873-.225 2.81-.312 4.715-.398V14.83L5.398 1.5z"/>',
+    doordash:'<path d="M23.071 8.409a6.09 6.09 0 00-5.396-3.228H.584A.589.589 0 00.17 6.184L3.894 9.93a1.752 1.752 0 001.242.516h12.049a1.554 1.554 0 11.031 3.108H8.91a.589.589 0 00-.415 1.003l3.725 3.747a1.75 1.75 0 001.242.516h3.757c4.887 0 8.584-5.225 5.852-10.413"/>',
+    instacart:'<path d="M15.629 9.619c1.421 1.429 2.58 3.766 1.917 5.152-1.778 3.715-15.04 10.226-16.169 9.1C.252 22.746 6.768 9.476 10.481 7.697c1.388-.66 3.724.51 5.152 1.92l-.005.014v-.012zm7.028-1.566c-.231-.855-.821-1.717-1.7-1.82-1.61-.186-4.151 2.663-3.971 3.339.181.69 3.766 1.875 5.1.915.691-.494.781-1.56.556-2.414l.015-.02zM17.666.158c1.198.324 2.407 1.148 2.551 2.382.261 2.259-3.732 5.819-4.68 5.564-.948-.251-2.618-5.284-1.269-7.162.695-.972 2.201-1.106 3.399-.788v.004h-.001z"/>',
+    amazon:'<path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/>',
+    americanexpress:'<path d="M16.015 14.378c0-.32-.135-.496-.344-.622-.21-.12-.464-.135-.81-.135h-1.543v2.82h.675v-1.027h.72c.24 0 .39.024.478.125.12.13.104.38.104.55v.35h.66v-.555c-.002-.25-.017-.376-.108-.516-.06-.08-.18-.18-.33-.234l.02-.008c.18-.072.48-.297.48-.747zm-.87.407l-.028-.002c-.09.053-.195.058-.33.058h-.81v-.63h.824c.12 0 .24 0 .33.05.098.048.156.147.15.255 0 .12-.045.215-.134.27zM20.297 15.837H19v.6h1.304c.676 0 1.05-.278 1.05-.884 0-.28-.066-.448-.187-.582-.153-.133-.392-.193-.73-.207l-.376-.015c-.104 0-.18 0-.255-.03-.09-.03-.15-.105-.15-.21 0-.09.017-.166.09-.21.083-.046.177-.066.272-.06h1.23v-.602h-1.35c-.704 0-.958.437-.958.84 0 .9.776.855 1.407.87.104 0 .18.015.225.06.046.03.082.106.082.18 0 .077-.035.15-.08.18-.06.053-.15.07-.277.07zM0 0v10.096L.81 8.22h1.75l.225.464V8.22h2.043l.45 1.02.437-1.013h6.502c.295 0 .56.057.756.236v-.23h1.787v.23c.307-.17.686-.23 1.12-.23h2.606l.24.466v-.466h1.918l.254.465v-.466h1.858v3.948H20.87l-.36-.6v.585h-2.353l-.256-.63h-.583l-.27.614h-1.213c-.48 0-.84-.104-1.08-.24v.24h-2.89v-.884c0-.12-.03-.12-.105-.135h-.105v1.036H6.067v-.48l-.21.48H4.69l-.202-.48v.465H2.235l-.256-.624H1.4l-.256.624H0V24h23.786v-7.108c-.27.135-.613.18-.973.18H21.09v-.255c-.21.165-.57.255-.914.255H14.71v-.9c0-.12-.018-.12-.12-.12h-.075v1.022h-1.8v-1.066c-.298.136-.643.15-.928.136h-.214v.915h-2.18l-.54-.617-.57.6H4.742v-3.93h3.61l.518.602.554-.6h2.412c.28 0 .74.03.942.225v-.24h2.177c.202 0 .644.045.903.225v-.24h3.265v.24c.163-.164.508-.24.803-.24h1.89v.24c.194-.15.464-.24.84-.24h1.176V0H0zM21.156 14.955c.004.005.006.012.01.016.01.01.024.01.032.02l-.042-.035zM23.828 13.082h.065v.555h-.065zM23.865 15.03v-.005c-.03-.025-.046-.048-.075-.07-.15-.153-.39-.215-.764-.225l-.36-.012c-.12 0-.194-.007-.27-.03-.09-.03-.15-.105-.15-.21 0-.09.03-.16.09-.204.076-.045.15-.05.27-.05h1.223v-.588h-1.283c-.69 0-.96.437-.96.84 0 .9.78.855 1.41.87.104 0 .18.015.224.06.046.03.076.106.076.18 0 .07-.034.138-.09.18-.045.056-.136.07-.27.07h-1.288v.605h1.287c.42 0 .734-.118.9-.36h.03c.09-.134.135-.3.135-.523 0-.24-.045-.39-.135-.526zM18.597 14.208v-.583h-2.235V16.458h2.235v-.585h-1.57v-.57h1.533v-.584h-1.532v-.51M13.51 8.787h.685V11.6h-.684zM13.126 9.543l-.007.006c0-.314-.13-.5-.34-.624-.217-.125-.47-.135-.81-.135H10.43v2.82h.674v-1.034h.72c.24 0 .39.03.487.12.122.136.107.378.107.548v.354h.677v-.553c0-.25-.016-.375-.11-.516-.09-.107-.202-.19-.33-.237.172-.07.472-.3.472-.75zm-.855.396h-.015c-.09.054-.195.056-.33.056H11.1v-.623h.825c.12 0 .24.004.33.05.09.04.15.128.15.25s-.047.22-.134.266zM15.92 9.373h.632v-.6h-.644c-.464 0-.804.105-1.02.33-.286.3-.362.69-.362 1.11 0 .512.123.833.36 1.074.232.238.645.31.97.31h.78l.255-.627h1.39l.262.627h1.36v-2.11l1.272 2.11h.95l.002.002V8.786h-.684v1.963l-1.18-1.96h-1.02V11.4L18.11 8.744h-1.004l-.943 2.22h-.3c-.177 0-.362-.03-.468-.134-.125-.15-.186-.36-.186-.662 0-.285.08-.51.194-.63.133-.135.272-.165.516-.165zm1.668-.108l.464 1.118v.002h-.93l.466-1.12zM2.38 10.97l.254.628H4V9.393l.972 2.205h.584l.973-2.202.015 2.202h.69v-2.81H6.118l-.807 1.904-.876-1.905H3.343v2.663L2.205 8.787h-.997L.01 11.597h.72l.26-.626h1.39zm-.688-1.705l.46 1.118-.003.002h-.915l.457-1.12zM11.856 13.62H9.714l-.85.923-.825-.922H5.346v2.82H8l.855-.932.824.93h1.302v-.94h.838c.6 0 1.17-.164 1.17-.945l-.006-.003c0-.78-.598-.93-1.128-.93zM7.67 15.853l-.014-.002H6.02v-.557h1.47v-.574H6.02v-.51H7.7l.733.82-.764.824zm2.642.33l-1.03-1.147 1.03-1.108v2.253zm1.553-1.258h-.885v-.717h.885c.24 0 .42.098.42.344 0 .243-.15.372-.42.372zM9.967 9.373v-.586H7.73V11.6h2.237v-.58H8.4v-.564h1.527V9.88H8.4v-.507"/>',
+    target:'<path d="M12.0005 0C18.627 0 24 5.373 24 12.0005 24 18.627 18.627 24 11.9995 24 5.373 24 0 18.627 0 11.9995 0 5.373 5.373 0 12.0005 0zm0 19.826a7.8265 7.8265 0 10-.001-15.652C7.7133 4.2246 4.2653 7.7136 4.2653 12c0 4.2864 3.448 7.7754 7.7342 7.826h.001zm0-3.9853a3.8402 3.8402 0 110-7.6803c2.1204.0006 3.839 1.7197 3.839 3.8401s-1.7186 3.8396-3.839 3.8402z"/>',
+    macys:'<path d="M12.015.624L9.19 9.293H0l7.445 5.384-2.819 8.673L12 17.986l7.422 5.393-2.835-8.713L24 9.292h-9.162L12.015.622v.002z"/>'
+  };
+  function mark(kind, glyph, color, id){
+    var idAttr = id ? ' id="'+id+'"' : '';
+    var svg = kind==='logo'
+      ? '<svg viewBox="0 0 24 24" fill="currentColor">'+LOGOS[glyph]+'</svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">'+ICONS[glyph]+'</svg>';
+    return '<div class="merchant-mark"'+idAttr+' style="color:'+color+'">'+svg+'</div>';
+  }
+
+  var TX = [
+    { id:'target', store:'Target', category:'Groceries', date:'Sep 22, 2026', kind:'logo', glyph:'target', color:'#CC0000',
+      payment:'Debit card •• 4187', total:'$86.00',
+      items:[{n:'Organic jasmine rice, 5 lb',q:'',p:'$6.49'},{n:'Canned black beans',q:'× 4',p:'$4.29'},{n:'Whole milk',q:'3 × 1 gal',p:'$11.97'},{n:'Olive oil, 1 L',q:'',p:'$8.99'},{n:'+14 more items',q:'',p:'$54.26'}] },
+    { id:'doordash', store:'DoorDash', category:'Dining out', date:'Sep 21, 2026', kind:'logo', glyph:'doordash', color:'#FF3008',
+      payment:'Apple Pay', total:'$24.00',
+      items:[{n:'Bacon cheeseburger',q:'1',p:'$10.49'},{n:'Fries',q:'1',p:'$3.49'},{n:'Delivery &amp; service fee',q:'',p:'$4.99'},{n:'Tip',q:'',p:'$3.00'},{n:'Taxes',q:'',p:'$2.03'}] },
+    { id:'bestbuy', store:'Best Buy', category:'Electronics', date:'Sep 18, 2026', kind:'icon', glyph:'headphones', color:'#0046BE',
+      payment:'Credit card •• 4412', total:'$149.00',
+      items:[{n:'Sony WF wireless earbuds',q:'1',p:'$149.00'}],
+      note:'Warranty tracked · ends Sep 18, 2027' },
+    { id:'cvs', store:'CVS Pharmacy', category:'Health', date:'Sep 17, 2026', kind:'icon', glyph:'plus', color:'#E31837',
+      payment:'Debit card •• 2209', total:'$34.00',
+      items:[{n:'Vitamin D3',q:'1 bottle',p:'$11.99'},{n:'Pain reliever',q:'× 2',p:'$7.98'},{n:'Daily multivitamin',q:'1',p:'$14.03'}] },
+    { id:'instacart', store:'Instacart', category:'Groceries', date:'Sep 15, 2026', kind:'logo', glyph:'instacart', color:'#43B02A',
+      payment:'Apple Pay', total:'$79.00',
+      items:[{n:'Fruits &amp; vegetables',q:'',p:'$28.40'},{n:'Dairy &amp; bread',q:'',p:'$19.60'},{n:'Pantry staples',q:'',p:'$22.00'},{n:'+18 more items',q:'',p:'$9.00'}] },
+    { id:'netflix', store:'Netflix', category:'Subscription', date:'Sep 12, 2026', kind:'logo', glyph:'netflix', color:'#E50914',
+      payment:'Auto-debit card •• 7788', total:'$15.49',
+      items:[{n:'Standard plan (with ads)',q:'Monthly',p:'$15.49'}] }
+  ];
+
+  var txnList = document.getElementById('txn-list');
+  txnList.innerHTML = TX.map(function(t){
+    return '<div class="txn-row" tabindex="0" role="button" data-tx="'+t.id+'" aria-haspopup="dialog">'
+      + mark(t.kind, t.glyph, t.color)
+      + '<div class="txn-mid"><div class="txn-store">'+t.store+'</div><div class="txn-meta"><span class="tag">'+t.category+'</span> '+t.date.replace(', 2026','')+'</div></div>'
+      + '<div class="txn-amt num">'+t.total+'</div>'
+      + '<svg class="txn-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>'
+      + '</div>';
+  }).join('');
+
+  var overlay = document.getElementById('modal-overlay');
+  function openModal(id){
+    var t = TX.filter(function(x){return x.id===id;})[0];
+    if(!t) return;
+    document.getElementById('modal-mark').outerHTML = mark(t.kind, t.glyph, t.color, 'modal-mark');
+    document.getElementById('modal-store').textContent = t.store;
+    document.getElementById('modal-meta').textContent = t.date + ' · ' + t.category;
+    document.getElementById('modal-items').innerHTML = t.items.map(function(it){
+      return '<div class="modal-item-row"><span>'+it.n+'<span class="modal-item-qty">'+it.q+'</span></span><span class="num">'+it.p+'</span></div>';
+    }).join('');
+    document.getElementById('modal-total').textContent = t.total;
+    document.getElementById('modal-pay').textContent = t.payment;
+    var note = document.getElementById('modal-note');
+    if(t.note){ note.style.display='flex'; document.getElementById('modal-note-text').textContent = t.note; }
+    else { note.style.display='none'; }
+    overlay.classList.add('open');
+  }
+  function closeModal(){ overlay.classList.remove('open'); }
+
+  txnList.addEventListener('click', function(e){
+    var row = e.target.closest('.txn-row');
+    if(row) openModal(row.getAttribute('data-tx'));
+  });
+  txnList.addEventListener('keydown', function(e){
+    if(e.key==='Enter' || e.key===' '){
+      var row = e.target.closest('.txn-row');
+      if(row){ e.preventDefault(); openModal(row.getAttribute('data-tx')); }
+    }
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
+  document.getElementById('modal-note').addEventListener('click', closeModal);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
+  var MODES = {
+    personal: {
+      stats: [
+        {label:"Spent this month", value:"$1,500", delta:"12% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)", ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 15l6-6 6 6"/></svg>', ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+        {label:"Saved via cashback", value:"$108", delta:"8% vs August", cls:"down", bg:"var(--good-soft)", fg:"var(--good)", ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>', ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>'},
+        {label:"Active warranties", value:"7", delta:"2 expiring within 2 weeks", cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>'},
+        {label:"Returns closing soon", value:"2", delta:"Next window closes in 5 days", cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-1"/></svg>'}
+      ],
+      catTitle:"Spending by category", catSub:"Personal · September 2026",
+      categories:[
+        {name:"Groceries &amp; food", amount:773}, {name:"Electronics", amount:299},
+        {name:"Home &amp; utilities", amount:135}, {name:"Transport &amp; fuel", amount:128},
+        {name:"Health &amp; pharmacy", amount:104}, {name:"Subscriptions", amount:61}
+      ],
+      trendSub:"Personal · last 6 months",
+      trend:[{m:"Apr",v:1170},{m:"May",v:1246},{m:"Jun",v:1222},{m:"Jul",v:1298},{m:"Aug",v:1339},{m:"Sep",v:1500}]
+    },
+    business: {
+      stats: [
+        {label:"Spent this month", value:"$617", delta:"4% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+        {label:"Pending reimbursement", value:"$145", delta:"2 receipts pending", cls:"flat", bg:"var(--warning-soft)", fg:"var(--warning)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13l2 2 4-4"/></svg>'},
+        {label:"Receipts tagged business", value:"23", delta:"This month", cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+        {label:"Awaiting approval", value:"3", delta:"Avg. 2 days to approve", cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>'}
+      ],
+      catTitle:"Spending by category", catSub:"Business · September 2026",
+      categories:[
+        {name:"Client meals &amp; entertainment", amount:210}, {name:"Travel &amp; transport", amount:185},
+        {name:"Software &amp; subscriptions", amount:105}, {name:"Office supplies", amount:82},
+        {name:"Coworking &amp; venue", amount:35}
+      ],
+      trendSub:"Business · last 6 months",
+      trend:[{m:"Apr",v:480},{m:"May",v:535},{m:"Jun",v:545},{m:"Jul",v:572},{m:"Aug",v:593},{m:"Sep",v:617}]
+    }
+  };
+
+  function fmt(n){ return '$' + n.toLocaleString('en-US'); }
+
+  function renderStats(mode){
+    var m = MODES[mode];
+    document.getElementById('stats-grid').innerHTML = m.stats.map(function(s){
+      var deltaIcon = s.ic ? s.ic : "";
+      return '<div class="stat">'
+        + '<div class="stat-icon" style="background:'+s.bg+'; color:'+s.fg+'">'+s.ic2+'</div>'
+        + '<div class="stat-label">'+s.label+'</div>'
+        + '<div class="stat-value num">'+s.value+'</div>'
+        + '<div class="stat-delta '+s.cls+'">'+deltaIcon+' '+s.delta+'</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function renderCategories(mode){
+    var m = MODES[mode];
+    var max = Math.max.apply(null, m.categories.map(function(c){return c.amount;}));
+    var total = m.categories.reduce(function(a,c){return a+c.amount;},0);
+    document.getElementById('category-bars').innerHTML = m.categories.map(function(c){
+      var pct = Math.round((c.amount/max)*100);
+      return '<div><div class="bar-row-top"><span class="bar-row-name">'+c.name+'</span><span class="num">'+fmt(c.amount)+'</span></div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join('') + '<div class="bar-total"><span>Total</span><span class="num">'+fmt(total)+'</span></div>';
+    document.getElementById('cat-title').textContent = m.catTitle;
+    document.getElementById('cat-sub').textContent = m.catSub;
+  }
+
+  var trendVH = 180;
+  function renderTrend(mode){
+    var m = MODES[mode];
+    var data = m.trend;
+    document.getElementById('trend-sub').textContent = m.trendSub;
+    /* viewBox width matches the container's real rendered width, so the
+       SVG maps 1:1 to CSS pixels — no non-uniform stretch, no distorted
+       circles/text. */
+    var w = Math.max(document.getElementById('trend-chart').clientWidth, 280);
+    var leftPad=16, rightPad=16, n=data.length;
+    var step=(w-leftPad-rightPad)/(n-1);
+    var vals = data.map(function(d){return d.v;});
+    var min = Math.min.apply(null, vals) * 0.88;
+    var max = Math.max.apply(null, vals) * 1.12;
+    var baseline = trendVH-38, top = 24;
+    function xAt(i){ return leftPad + i*step; }
+    function yAt(v){ return baseline - ((v-min)/(max-min)) * (baseline-top); }
+    var pts = data.map(function(d,i){ return {x:xAt(i), y:yAt(d.v), m:d.m, v:d.v}; });
+    var linePath = pts.map(function(p,i){ return (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1); }).join(' ');
+    var areaPath = 'M'+pts[0].x.toFixed(1)+','+baseline+' '+pts.map(function(p){return 'L'+p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+' L'+pts[pts.length-1].x.toFixed(1)+','+baseline+' Z';
+    var last = pts[pts.length-1];
+    var dots = pts.map(function(p,i){
+      var isEnd = i===pts.length-1;
+      return '<circle class="trend-dot'+(isEnd?' end':'')+'" cx="'+p.x+'" cy="'+p.y+'" r="'+(isEnd?5:4)+'"></circle>'
+        + '<text class="trend-label" x="'+p.x+'" y="'+(trendVH-14)+'" text-anchor="middle">'+p.m+'</text>'
+        + '<circle class="trend-hit" data-m="'+p.m+'" data-v="'+p.v+'" cx="'+p.x+'" cy="'+p.y+'" r="14"></circle>';
+    }).join('');
+    var svg = '<svg viewBox="0 0 '+w+' '+trendVH+'">'
+      + '<line class="trend-grid" x1="'+leftPad+'" y1="'+baseline+'" x2="'+(w-rightPad)+'" y2="'+baseline+'"></line>'
+      + '<path class="trend-area" d="'+areaPath+'"></path>'
+      + '<path class="trend-line" d="'+linePath+'"></path>'
+      + dots
+      + '<text class="trend-value" x="'+last.x+'" y="'+(last.y-14)+'" text-anchor="end">'+fmt(last.v)+'</text>'
+      + '</svg>';
+    document.getElementById('trend-chart').innerHTML = svg;
+  }
+  var trendResizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(trendResizeTimer);
+    trendResizeTimer = setTimeout(function(){
+      renderTrend(document.getElementById('tab-business').classList.contains('active') ? 'business' : 'personal');
+    }, 120);
+  });
+
+  var trendContainer = document.getElementById('trend-chart');
+  var tip = document.getElementById('trend-tip');
+  function positionTip(t){
+    var rect = t.getBoundingClientRect();
+    var parentRect = trendContainer.closest('.card').getBoundingClientRect();
+    tip.style.left = (rect.left - parentRect.left + rect.width/2) + 'px';
+    tip.style.top = (rect.top - parentRect.top) + 'px';
+  }
+  trendContainer.addEventListener('mouseover', function(e){
+    var t = e.target.closest('.trend-hit');
+    if(!t) return;
+    tip.textContent = t.getAttribute('data-m') + ' · ' + fmt(Number(t.getAttribute('data-v')));
+    tip.style.display='block';
+    positionTip(t);
+  });
+  trendContainer.addEventListener('mousemove', function(e){
+    var t = e.target.closest('.trend-hit');
+    if(t) positionTip(t);
+  });
+  trendContainer.addEventListener('mouseout', function(e){
+    var t = e.target.closest('.trend-hit');
+    if(t) tip.style.display='none';
+  });
+
+  var btnP = document.getElementById('tab-personal');
+  var btnB = document.getElementById('tab-business');
+  function setMode(mode){
+    renderStats(mode); renderCategories(mode); renderTrend(mode);
+    btnP.classList.toggle('active', mode==='personal');
+    btnB.classList.toggle('active', mode==='business');
+    btnP.setAttribute('aria-selected', mode==='personal');
+    btnB.setAttribute('aria-selected', mode==='business');
+  }
+  btnP.addEventListener('click', function(){ setMode('personal'); });
+  btnB.addEventListener('click', function(){ setMode('business'); });
+  setMode('personal');
+
+  document.querySelectorAll('.ai-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var input = document.getElementById('ai-ask-input');
+      input.value = chip.textContent; input.focus();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
