@@ -888,7 +888,7 @@
       }
       return '<div class="bill"><div class="bill-top clickable row-hover" data-detail="split-bill" data-id="'+b.id+'" style="flex:1;">'
         + '<div><div class="bill-name">'+b.name+'</div><div class="bill-sub">Split with '+b.people+'</div></div>'
-        + '<div class="bill-amt '+(b.paid?'owed':'owe')+' num">'+(b.paid?'Paid':'−'+fmt(b.amount))+'</div></div>'
+        + '<div class="bill-amt '+(b.paid?'owed':'owe')+' num">'+(b.paid?'Paid':fmt(b.amount))+'</div></div>'
         + '<div class="bill-foot"><span class="bill-progress">Requested '+b.requestedOn.replace(', 2026','')+'</span>'
         + (b.paid ? '' : '<button class="mini-btn solid" data-action="pay" data-id="'+b.id+'" type="button">Pay now</button>') + '</div></div>';
     }).join('');
