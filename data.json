@@ -1,147 +1,581 @@
 {
-  "meta": { "greetingName": "Meera", "month": "September 2026" },
-  "inbox": { "newReceipts": 12, "emailed": 8, "scanned": 4 },
+  "meta": {
+    "greetingName": "Meera",
+    "month": "September 2026"
+  },
+  "inbox": {
+    "newReceipts": 12,
+    "emailed": 8,
+    "scanned": 4
+  },
   "personal": {
     "stats": {
-      "spent": 1500, "spentDeltaPct": 12,
-      "saved": 108, "savedDeltaPct": 8,
-      "activeWarranties": 7, "warrantiesNote": "2 expiring within 2 weeks",
-      "returnsClosing": 2, "returnsNote": "Next window closes in 5 days"
+      "spent": 1500,
+      "spentDeltaPct": 12,
+      "saved": 108,
+      "savedDeltaPct": 8,
+      "activeWarranties": 7,
+      "warrantiesNote": "2 expiring within 2 weeks",
+      "returnsClosing": 2,
+      "returnsNote": "Next window closes in 5 days"
     },
     "categories": [
-      { "name": "Groceries &amp; food", "amount": 773 },
-      { "name": "Electronics", "amount": 299 },
-      { "name": "Home &amp; utilities", "amount": 135 },
-      { "name": "Transport &amp; fuel", "amount": 128 },
-      { "name": "Health &amp; pharmacy", "amount": 104 },
-      { "name": "Subscriptions", "amount": 61 }
+      {
+        "name": "Groceries &amp; food",
+        "amount": 773
+      },
+      {
+        "name": "Electronics",
+        "amount": 299
+      },
+      {
+        "name": "Home &amp; utilities",
+        "amount": 135
+      },
+      {
+        "name": "Transport &amp; fuel",
+        "amount": 128
+      },
+      {
+        "name": "Health &amp; pharmacy",
+        "amount": 104
+      },
+      {
+        "name": "Subscriptions",
+        "amount": 61
+      }
     ],
     "trend": [
-      { "m": "Apr", "v": 1170 }, { "m": "May", "v": 1246 }, { "m": "Jun", "v": 1222 },
-      { "m": "Jul", "v": 1298 }, { "m": "Aug", "v": 1339 }, { "m": "Sep", "v": 1500 }
+      {
+        "m": "Apr",
+        "v": 1170
+      },
+      {
+        "m": "May",
+        "v": 1246
+      },
+      {
+        "m": "Jun",
+        "v": 1222
+      },
+      {
+        "m": "Jul",
+        "v": 1298
+      },
+      {
+        "m": "Aug",
+        "v": 1339
+      },
+      {
+        "m": "Sep",
+        "v": 1500
+      }
     ]
   },
   "business": {
     "stats": {
-      "spent": 617, "spentDeltaPct": 4,
-      "pendingReimbursement": 145, "pendingNote": "2 receipts pending",
+      "spent": 617,
+      "spentDeltaPct": 4,
+      "pendingReimbursement": 145,
+      "pendingNote": "2 receipts pending",
       "receiptsTagged": 23,
       "awaitingApproval": 3
     },
     "categories": [
-      { "name": "Client meals &amp; entertainment", "amount": 210 },
-      { "name": "Travel &amp; transport", "amount": 185 },
-      { "name": "Software &amp; subscriptions", "amount": 105 },
-      { "name": "Office supplies", "amount": 82 },
-      { "name": "Coworking &amp; venue", "amount": 35 }
+      {
+        "name": "Client meals &amp; entertainment",
+        "amount": 210
+      },
+      {
+        "name": "Travel &amp; transport",
+        "amount": 185
+      },
+      {
+        "name": "Software &amp; subscriptions",
+        "amount": 105
+      },
+      {
+        "name": "Office supplies",
+        "amount": 82
+      },
+      {
+        "name": "Coworking &amp; venue",
+        "amount": 35
+      }
     ],
     "trend": [
-      { "m": "Apr", "v": 480 }, { "m": "May", "v": 535 }, { "m": "Jun", "v": 545 },
-      { "m": "Jul", "v": 572 }, { "m": "Aug", "v": 593 }, { "m": "Sep", "v": 617 }
+      {
+        "m": "Apr",
+        "v": 480
+      },
+      {
+        "m": "May",
+        "v": 535
+      },
+      {
+        "m": "Jun",
+        "v": 545
+      },
+      {
+        "m": "Jul",
+        "v": 572
+      },
+      {
+        "m": "Aug",
+        "v": 593
+      },
+      {
+        "m": "Sep",
+        "v": 617
+      }
     ]
   },
   "grocery": [
-    { "name": "Dining out", "meta": "DoorDash, Uber Eats", "amount": 227 },
-    { "name": "Pantry &amp; staples", "amount": 209 },
-    { "name": "Produce &amp; dairy", "amount": 144 },
-    { "name": "Meat &amp; protein", "amount": 118 },
-    { "name": "Snacks &amp; beverages", "amount": 75 }
+    {
+      "name": "Dining out",
+      "meta": "DoorDash, Uber Eats",
+      "amount": 227
+    },
+    {
+      "name": "Pantry &amp; staples",
+      "amount": 209
+    },
+    {
+      "name": "Produce &amp; dairy",
+      "amount": 144
+    },
+    {
+      "name": "Meat &amp; protein",
+      "amount": 118
+    },
+    {
+      "name": "Snacks &amp; beverages",
+      "amount": 75
+    }
   ],
   "budgets": [
-    { "id": "groceries", "name": "Groceries", "spent": 546, "budget": 550 },
-    { "id": "dining", "name": "Dining out", "spent": 227, "budget": 175 },
-    { "id": "shopping", "name": "Shopping", "spent": 299, "budget": 245 },
-    { "id": "transport", "name": "Transport &amp; fuel", "spent": 128, "budget": 140 },
-    { "id": "subscriptions", "name": "Subscriptions", "spent": 61, "budget": 70 }
+    {
+      "id": "groceries",
+      "name": "Groceries",
+      "spent": 546,
+      "budget": 550
+    },
+    {
+      "id": "dining",
+      "name": "Dining out",
+      "spent": 227,
+      "budget": 175
+    },
+    {
+      "id": "shopping",
+      "name": "Shopping",
+      "spent": 299,
+      "budget": 245
+    },
+    {
+      "id": "transport",
+      "name": "Transport &amp; fuel",
+      "spent": 128,
+      "budget": 140
+    },
+    {
+      "id": "subscriptions",
+      "name": "Subscriptions",
+      "spent": 61,
+      "budget": 70
+    }
   ],
   "transactions": [
-    { "id": "target-0922", "store": "Target", "category": "Groceries", "date": "Sep 22, 2026",
-      "kind": "logo", "glyph": "target", "color": "#CC0000",
-      "payment": "Debit card •• 4187", "total": 86.00,
+    {
+      "id": "target-0922",
+      "store": "Target",
+      "category": "Groceries",
+      "date": "Sep 22, 2026",
+      "kind": "logo",
+      "glyph": "target",
+      "color": "#CC0000",
+      "payment": "Debit card •• 4187",
+      "total": 86,
       "items": [
-        { "n": "Organic jasmine rice, 5 lb", "q": "", "p": 6.49 },
-        { "n": "Canned black beans", "q": "× 4", "p": 4.29 },
-        { "n": "Whole milk", "q": "3 × 1 gal", "p": 11.97 },
-        { "n": "Olive oil, 1 L", "q": "", "p": 8.99 },
-        { "n": "+14 more items", "q": "", "p": 54.26 }
-      ] },
-    { "id": "doordash-0921", "store": "DoorDash", "category": "Dining out", "date": "Sep 21, 2026",
-      "kind": "logo", "glyph": "doordash", "color": "#FF3008",
-      "payment": "Apple Pay", "total": 24.00,
+        {
+          "n": "Organic jasmine rice, 5 lb",
+          "q": "",
+          "p": 6.49
+        },
+        {
+          "n": "Canned black beans",
+          "q": "× 4",
+          "p": 4.29
+        },
+        {
+          "n": "Whole milk",
+          "q": "3 × 1 gal",
+          "p": 11.97
+        },
+        {
+          "n": "Olive oil, 1 L",
+          "q": "",
+          "p": 8.99
+        },
+        {
+          "n": "+14 more items",
+          "q": "",
+          "p": 54.26
+        }
+      ]
+    },
+    {
+      "id": "doordash-0921",
+      "store": "DoorDash",
+      "category": "Dining out",
+      "date": "Sep 21, 2026",
+      "kind": "logo",
+      "glyph": "doordash",
+      "color": "#FF3008",
+      "payment": "Apple Pay",
+      "total": 24,
       "items": [
-        { "n": "Bacon cheeseburger", "q": "1", "p": 10.49 },
-        { "n": "Fries", "q": "1", "p": 3.49 },
-        { "n": "Delivery &amp; service fee", "q": "", "p": 4.99 },
-        { "n": "Tip", "q": "", "p": 3.00 },
-        { "n": "Taxes", "q": "", "p": 2.03 }
-      ] },
-    { "id": "bestbuy-0918", "store": "Best Buy", "category": "Electronics", "date": "Sep 18, 2026",
-      "kind": "icon", "glyph": "headphones", "color": "#0046BE",
-      "payment": "Credit card •• 4412", "total": 149.00,
-      "items": [ { "n": "Sony WF wireless earbuds", "q": "1", "p": 149.00 } ],
-      "note": "Warranty tracked · ends Sep 18, 2027", "warrantyId": "wty-earbuds" },
-    { "id": "cvs-0917", "store": "CVS Pharmacy", "category": "Health", "date": "Sep 17, 2026",
-      "kind": "icon", "glyph": "plus", "color": "#E31837",
-      "payment": "Debit card •• 2209", "total": 34.00,
+        {
+          "n": "Bacon cheeseburger",
+          "q": "1",
+          "p": 10.49
+        },
+        {
+          "n": "Fries",
+          "q": "1",
+          "p": 3.49
+        },
+        {
+          "n": "Delivery &amp; service fee",
+          "q": "",
+          "p": 4.99
+        },
+        {
+          "n": "Tip",
+          "q": "",
+          "p": 3
+        },
+        {
+          "n": "Taxes",
+          "q": "",
+          "p": 2.03
+        }
+      ]
+    },
+    {
+      "id": "bestbuy-0918",
+      "store": "Best Buy",
+      "category": "Electronics",
+      "date": "Sep 18, 2026",
+      "kind": "icon",
+      "glyph": "headphones",
+      "color": "#0046BE",
+      "payment": "Credit card •• 4412",
+      "total": 149,
       "items": [
-        { "n": "Vitamin D3", "q": "1 bottle", "p": 11.99 },
-        { "n": "Pain reliever", "q": "× 2", "p": 7.98 },
-        { "n": "Daily multivitamin", "q": "1", "p": 14.03 }
-      ] },
-    { "id": "instacart-0915", "store": "Instacart", "category": "Groceries", "date": "Sep 15, 2026",
-      "kind": "logo", "glyph": "instacart", "color": "#43B02A",
-      "payment": "Apple Pay", "total": 79.00,
+        {
+          "n": "Sony WF wireless earbuds",
+          "q": "1",
+          "p": 149
+        }
+      ],
+      "note": "Warranty tracked · ends Sep 18, 2027",
+      "warrantyId": "wty-earbuds"
+    },
+    {
+      "id": "cvs-0917",
+      "store": "CVS Pharmacy",
+      "category": "Health",
+      "date": "Sep 17, 2026",
+      "kind": "icon",
+      "glyph": "plus",
+      "color": "#E31837",
+      "payment": "Debit card •• 2209",
+      "total": 34,
       "items": [
-        { "n": "Fruits &amp; vegetables", "q": "", "p": 28.40 },
-        { "n": "Dairy &amp; bread", "q": "", "p": 19.60 },
-        { "n": "Pantry staples", "q": "", "p": 22.00 },
-        { "n": "+18 more items", "q": "", "p": 9.00 }
-      ] },
-    { "id": "netflix-0912", "store": "Netflix", "category": "Subscription", "date": "Sep 12, 2026",
-      "kind": "logo", "glyph": "netflix", "color": "#E50914",
-      "payment": "Auto-debit card •• 7788", "total": 15.49,
-      "items": [ { "n": "Standard plan (with ads)", "q": "Monthly", "p": 15.49 } ] }
+        {
+          "n": "Vitamin D3",
+          "q": "1 bottle",
+          "p": 11.99
+        },
+        {
+          "n": "Pain reliever",
+          "q": "× 2",
+          "p": 7.98
+        },
+        {
+          "n": "Daily multivitamin",
+          "q": "1",
+          "p": 14.03
+        }
+      ]
+    },
+    {
+      "id": "instacart-0915",
+      "store": "Instacart",
+      "category": "Groceries",
+      "date": "Sep 15, 2026",
+      "kind": "logo",
+      "glyph": "instacart",
+      "color": "#43B02A",
+      "payment": "Apple Pay",
+      "total": 79,
+      "items": [
+        {
+          "n": "Fruits &amp; vegetables",
+          "q": "",
+          "p": 28.4
+        },
+        {
+          "n": "Dairy &amp; bread",
+          "q": "",
+          "p": 19.6
+        },
+        {
+          "n": "Pantry staples",
+          "q": "",
+          "p": 22
+        },
+        {
+          "n": "+18 more items",
+          "q": "",
+          "p": 9
+        }
+      ]
+    },
+    {
+      "id": "netflix-0912",
+      "store": "Netflix",
+      "category": "Subscription",
+      "date": "Sep 12, 2026",
+      "kind": "logo",
+      "glyph": "netflix",
+      "color": "#E50914",
+      "payment": "Auto-debit card •• 7788",
+      "total": 15.49,
+      "items": [
+        {
+          "n": "Standard plan (with ads)",
+          "q": "Monthly",
+          "p": 15.49
+        }
+      ]
+    }
   ],
   "warranties": [
-    { "id": "wty-airfryer", "name": "Air Fryer", "store": "Best Buy", "kind": "icon", "glyph": "headphones", "color": "#0046BE",
-      "purchased": "Sep 30, 2025", "expires": "Sep 30, 2026", "daysLeft": 6, "status": "critical" },
-    { "id": "wty-washer", "name": "Washing Machine", "store": "Home Depot", "kind": "icon", "glyph": "plug", "color": "#F96302",
-      "purchased": "Oct 5, 2024", "expires": "Oct 5, 2026", "daysLeft": 11, "status": "warning" },
-    { "id": "wty-laptop", "name": "Laptop", "store": "Amazon", "kind": "logo", "glyph": "amazon", "color": "#FF9900",
-      "purchased": "Feb 14, 2026", "expires": "Feb 14, 2027", "daysLeft": 143, "status": "good" },
-    { "id": "wty-earbuds", "name": "Wireless Earbuds", "store": "Best Buy", "kind": "icon", "glyph": "headphones", "color": "#0046BE",
-      "purchased": "Sep 18, 2026", "expires": "Sep 18, 2027", "daysLeft": 359, "status": "good" }
+    {
+      "id": "wty-airfryer",
+      "name": "Air Fryer",
+      "store": "Best Buy",
+      "kind": "icon",
+      "glyph": "headphones",
+      "color": "#0046BE",
+      "purchased": "Sep 30, 2025",
+      "expires": "Sep 30, 2026",
+      "daysLeft": 6,
+      "status": "critical"
+    },
+    {
+      "id": "wty-washer",
+      "name": "Washing Machine",
+      "store": "Home Depot",
+      "kind": "icon",
+      "glyph": "plug",
+      "color": "#F96302",
+      "purchased": "Oct 5, 2024",
+      "expires": "Oct 5, 2026",
+      "daysLeft": 11,
+      "status": "warning"
+    },
+    {
+      "id": "wty-laptop",
+      "name": "Laptop",
+      "store": "Amazon",
+      "kind": "logo",
+      "glyph": "amazon",
+      "color": "#FF9900",
+      "purchased": "Feb 14, 2026",
+      "expires": "Feb 14, 2027",
+      "daysLeft": 143,
+      "status": "good"
+    },
+    {
+      "id": "wty-earbuds",
+      "name": "Wireless Earbuds",
+      "store": "Best Buy",
+      "kind": "icon",
+      "glyph": "headphones",
+      "color": "#0046BE",
+      "purchased": "Sep 18, 2026",
+      "expires": "Sep 18, 2027",
+      "daysLeft": 359,
+      "status": "good"
+    }
   ],
   "returns": [
-    { "id": "ret-sweater", "name": "Sweater Set", "store": "Macy's", "kind": "logo", "glyph": "macys", "color": "#E21A2C",
-      "delivered": "Sep 22, 2026", "windowEnds": "Sep 29, 2026", "daysLeft": 5, "status": "warning", "returnStatus": "not_started" },
-    { "id": "ret-speaker", "name": "Bluetooth Speaker", "store": "Amazon", "kind": "logo", "glyph": "amazon", "color": "#FF9900",
-      "delivered": "Sep 20, 2026", "windowEnds": "Sep 30, 2026", "daysLeft": 6, "status": "warning", "returnStatus": "not_started" }
+    {
+      "id": "ret-sweater",
+      "name": "Sweater Set",
+      "store": "Macy's",
+      "kind": "logo",
+      "glyph": "macys",
+      "color": "#E21A2C",
+      "delivered": "Sep 22, 2026",
+      "windowEnds": "Sep 29, 2026",
+      "daysLeft": 5,
+      "status": "warning",
+      "returnStatus": "in_progress"
+    },
+    {
+      "id": "ret-speaker",
+      "name": "Bluetooth Speaker",
+      "store": "Amazon",
+      "kind": "logo",
+      "glyph": "amazon",
+      "color": "#FF9900",
+      "delivered": "Sep 20, 2026",
+      "windowEnds": "Sep 30, 2026",
+      "daysLeft": 6,
+      "status": "warning",
+      "returnStatus": "in_progress"
+    }
   ],
   "loyalty": [
-    { "id": "loy-target", "name": "Target Circle", "kind": "logo", "glyph": "target", "color": "#CC0000", "tier": "Green tier", "points": 1240, "pointsLabel": "points" },
-    { "id": "loy-amex", "name": "American Express", "kind": "logo", "glyph": "americanexpress", "color": "#2E77BC", "tier": "Silver tier", "points": 3860, "pointsLabel": "points" },
-    { "id": "loy-bestbuy", "name": "My Best Buy", "kind": "icon", "glyph": "headphones", "color": "#0046BE", "tier": "Blue tier", "points": 620, "pointsLabel": "points" },
-    { "id": "loy-doordash", "name": "DashPass", "kind": "logo", "glyph": "doordash", "color": "#FF3008", "tier": "Renews Nov 2, 2026", "points": null, "pointsLabel": "Active" }
+    {
+      "id": "loy-target",
+      "name": "Target Circle",
+      "kind": "logo",
+      "glyph": "target",
+      "color": "#CC0000",
+      "tier": "Green tier",
+      "points": 1240,
+      "pointsLabel": "points"
+    },
+    {
+      "id": "loy-amex",
+      "name": "American Express",
+      "kind": "logo",
+      "glyph": "americanexpress",
+      "color": "#2E77BC",
+      "tier": "Silver tier",
+      "points": 3860,
+      "pointsLabel": "points"
+    },
+    {
+      "id": "loy-bestbuy",
+      "name": "My Best Buy",
+      "kind": "icon",
+      "glyph": "headphones",
+      "color": "#0046BE",
+      "tier": "Blue tier",
+      "points": 620,
+      "pointsLabel": "points"
+    },
+    {
+      "id": "loy-doordash",
+      "name": "DashPass",
+      "kind": "logo",
+      "glyph": "doordash",
+      "color": "#FF3008",
+      "tier": "Renews Nov 2, 2026",
+      "points": null,
+      "pointsLabel": "Active"
+    }
   ],
   "rewards": [
-    { "id": "rwd-amex", "name": "$18 Amex statement credit", "have": 3860, "cost": 3000, "loyaltyId": "loy-amex", "redeemed": false },
-    { "id": "rwd-bestbuy", "name": "$25 off at Best Buy", "have": 620, "cost": 500, "loyaltyId": "loy-bestbuy", "redeemed": false },
-    { "id": "rwd-target", "name": "Target $12 gift card", "have": 1240, "cost": 1500, "loyaltyId": "loy-target", "redeemed": false }
+    {
+      "id": "rwd-amex",
+      "name": "$18 Amex statement credit",
+      "have": 3860,
+      "cost": 3000,
+      "loyaltyId": "loy-amex",
+      "redeemed": false
+    },
+    {
+      "id": "rwd-bestbuy",
+      "name": "$25 off at Best Buy",
+      "have": 620,
+      "cost": 500,
+      "loyaltyId": "loy-bestbuy",
+      "redeemed": false
+    },
+    {
+      "id": "rwd-target",
+      "name": "Target $12 gift card",
+      "have": 1240,
+      "cost": 1500,
+      "loyaltyId": "loy-target",
+      "redeemed": false
+    }
   ],
   "splitBills": [
-    { "id": "bill-miami", "name": "Miami trip — hotel", "people": "Aditi, Rohan, Priya", "amount": 110, "direction": "owed",
-      "paidCount": 2, "totalCount": 3, "lastReminded": null },
-    { "id": "bill-dinner", "name": "Dinner at Cheesecake Factory", "people": "Rohan, Priya", "amount": 32, "direction": "owed",
-      "paidCount": 1, "totalCount": 2, "lastReminded": null },
-    { "id": "bill-groceries", "name": "Apartment groceries", "people": "Ananya", "amount": 17, "direction": "owe",
-      "requestedOn": "Sep 20, 2026", "paid": false }
+    {
+      "id": "bill-miami",
+      "name": "Miami hotel",
+      "people": "Aditi, Rohan, Priya",
+      "amount": 110,
+      "direction": "owed",
+      "paidCount": 2,
+      "totalCount": 3,
+      "lastReminded": null
+    },
+    {
+      "id": "bill-dinner",
+      "name": "Dinner at Cheesecake Factory",
+      "people": "Rohan, Priya",
+      "amount": 32,
+      "direction": "owed",
+      "paidCount": 1,
+      "totalCount": 2,
+      "lastReminded": null
+    },
+    {
+      "id": "bill-groceries",
+      "name": "Apartment groceries",
+      "people": "Ananya",
+      "amount": 17,
+      "direction": "owe",
+      "requestedOn": "Sep 20, 2026",
+      "paid": false
+    }
   ],
   "reimbursements": [
-    { "id": "reim-lunch", "name": "Client lunch — Panera Bread", "date": "Sep 19, 2026", "category": "Client meals", "amount": 81, "status": "pending" },
-    { "id": "reim-teamdinner", "name": "Team dinner — Cheesecake Factory", "date": "Sep 14, 2026", "category": "Client meals", "amount": 64, "status": "pending" },
-    { "id": "reim-uber", "name": "Uber to client site", "date": "Sep 17, 2026", "category": "Travel", "amount": 22, "status": "approved" },
-    { "id": "reim-figma", "name": "Figma subscription", "date": "Sep 5, 2026", "category": "Software", "amount": 51, "status": "reimbursed" }
+    {
+      "id": "reim-lunch",
+      "name": "Lunch at Panera Bread",
+      "date": "Sep 19, 2026",
+      "category": "Client meals",
+      "amount": 81,
+      "status": "pending"
+    },
+    {
+      "id": "reim-teamdinner",
+      "name": "Team dinner at Cheesecake Factory",
+      "date": "Sep 14, 2026",
+      "category": "Client meals",
+      "amount": 64,
+      "status": "pending"
+    },
+    {
+      "id": "reim-uber",
+      "name": "Uber to client site",
+      "date": "Sep 17, 2026",
+      "category": "Travel",
+      "amount": 22,
+      "status": "approved"
+    },
+    {
+      "id": "reim-figma",
+      "name": "Figma subscription",
+      "date": "Sep 5, 2026",
+      "category": "Software",
+      "amount": 51,
+      "status": "reimbursed"
+    }
   ],
-  "eco": { "receipts": 142, "paperLb": 1.3, "co2Lb": 2.4 }
+  "eco": {
+    "receipts": 142,
+    "paperLb": 1.3,
+    "co2Lb": 2.4
+  }
 }

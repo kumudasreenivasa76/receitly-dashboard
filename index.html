@@ -509,10 +509,10 @@
           <div class="ai-title">Receitly AI<span>Your receipts, explained in plain language</span></div>
         </div>
         <div class="ai-insights">
-          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Dining out is up <span class="c">18%</span> from August — mostly weekend DoorDash orders, about $35 more than usual.</div>
-          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your grocery bill is <span class="g">$65 lower</span> this month — switching your staples run to Target is paying off.</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Dining out is up <span class="c">18%</span> from August, mostly weekend DoorDash orders, about $35 more than usual.</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your grocery bill is <span class="g">$65 lower</span> this month. Switching your staples run to Target is paying off.</div>
           <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your <b>Air Fryer</b> warranty (Best Buy) closes in <span class="c">6 days</span>, and 2 loyalty cards already have enough points to redeem.</div>
-          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>You're <b>$52 over</b> your dining budget and <b>$54 over</b> on shopping — want a plan to get back on track?</div>
+          <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>You're <b>$52 over</b> your dining budget and <b>$54 over</b> on shopping. Want a plan to get back on track?</div>
         </div>
         <div class="ai-answer" id="ai-answer"></div>
         <div class="ai-ask">
@@ -1107,7 +1107,7 @@
       var idx = DATA.returns.findIndex(function(x){return x.id===id;});
       DATA.returns[idx] = res.body;
       renderReturns();
-      if (inModal) { showMsg('Return started — a prepaid label has been emailed to you.', true); openDetail('return', id); }
+      if (inModal) { showMsg('Return started. A prepaid label has been emailed to you.', true); openDetail('return', id); }
     });
   }
   function remindBill(id, inModal){
@@ -1179,7 +1179,7 @@
   var ANSWERS = [
     { q:/spend more|spending more|why.*more/i, a: function(){
         var over = DATA.budgets.filter(function(b){return b.spent>b.budget;});
-        return "You're over budget on " + over.map(function(b){return b.name.toLowerCase();}).join(' and ') + " this month — dining out is " +
+        return "You're over budget on " + over.map(function(b){return b.name.toLowerCase();}).join(' and ') + " this month. Dining out is " +
           Math.round((over[0].spent/over[0].budget-1)*100) + "% over, mostly from DoorDash orders.";
       }},
     { q:/expir|closing|warrant|return/i, a: function(){
@@ -1194,7 +1194,7 @@
   function askAI(text){
     var box = document.getElementById('ai-answer');
     var hit = ANSWERS.find(function(a){ return a.q.test(text); });
-    box.textContent = hit ? hit.a() : "I can help with spending trends, budgets, warranties, returns and rewards — try one of the suggested questions below.";
+    box.textContent = hit ? hit.a() : "I can help with spending trends, budgets, warranties, returns and rewards. Try one of the suggested questions below.";
     box.style.display = 'block';
   }
   document.getElementById('ai-ask-btn').addEventListener('click', function(){
