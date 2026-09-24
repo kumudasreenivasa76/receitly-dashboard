@@ -91,6 +91,7 @@
   .nav-eco{
     margin-top:auto; display:flex; gap:8px; align-items:flex-start; font-size:11.5px;
     color:var(--ink-muted); background:var(--surface-sunken); border-radius:10px; padding:10px;
+    cursor:pointer; border:none; text-align:left; font-family:inherit;
   }
   .nav-eco svg{width:14px;height:14px; color:var(--good); flex-shrink:0; margin-top:1px;}
   .nav-eco b{color:var(--ink); display:block; font-size:12.5px;}
@@ -164,7 +165,7 @@
   .card-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
   .card-title{font-size:15.5px; font-weight:700; letter-spacing:-.005em;}
   .card-sub{font-size:12.5px; color:var(--ink-muted);}
-  .link{font-size:12.5px; font-weight:700; color:var(--blue); text-decoration:none; white-space:nowrap;}
+  .link{font-size:12.5px; font-weight:700; color:var(--blue); text-decoration:none; white-space:nowrap; background:none; border:none; cursor:pointer; font-family:inherit; padding:0;}
   .link:hover{text-decoration:underline;}
   .link:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible{outline:2px solid var(--pink); outline-offset:2px;}
 
@@ -200,6 +201,10 @@
     color:var(--ink-muted); padding:6px 12px; border-radius:999px; cursor:pointer;
   }
   .ai-chip:hover{border-color:var(--pink); color:var(--pink);}
+  .ai-answer{
+    display:none; margin-top:-4px; margin-bottom:16px; font-size:13px; line-height:1.5; background:var(--surface);
+    border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+  }
 
   /* ---- trend chart ---- */
   .trend-card .card-head{margin-bottom:6px;}
@@ -232,6 +237,11 @@
   .bar-fill{height:100%; border-radius:5px; background:var(--pink);}
   .bar-fill.good{background:var(--good);} .bar-fill.warning{background:var(--warning);} .bar-fill.critical{background:var(--critical);}
   .bar-total{display:flex; justify-content:space-between; padding-top:12px; margin-top:2px; border-top:1px solid var(--line); font-size:13px; font-weight:700;}
+
+  /* ---- clickable rows (shared) ---- */
+  .clickable{cursor:pointer; border:none; background:none; text-align:left; font-family:inherit; width:100%; padding:0; color:inherit;}
+  .row-hover{border-radius:9px; margin:0 -8px; padding:8px !important;}
+  .row-hover:hover, .row-hover:focus-visible{background:var(--surface-sunken);}
 
   /* ---- budgets ---- */
   .budget-row{display:flex; flex-direction:column; gap:6px;}
@@ -292,6 +302,7 @@
   }
   .mini-btn:hover{border-color:var(--pink); color:var(--pink);}
   .mini-btn.solid{background:var(--pink); border-color:var(--pink); color:#fff;}
+  .mini-btn:disabled{opacity:.5; cursor:default; border-color:var(--line); color:var(--ink-muted);}
 
   /* ---- loyalty cards ---- */
   .loy-list{display:flex; flex-direction:column; gap:10px;}
@@ -338,13 +349,14 @@
   .btn-export{
     border:1px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-size:12.5px;
     font-weight:700; padding:8px 14px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:6px;
+    text-decoration:none;
   }
   .btn-export:hover{border-color:var(--blue); color:var(--blue);}
   .btn-export svg{width:13px;height:13px;}
 
   /* ---- eco impact ---- */
-  .eco-card{background:var(--brand-gradient); border:none; color:#fff; display:flex; align-items:center; gap:24px; flex-wrap:wrap; padding:22px 24px;}
-  .eco-text{flex:1; min-width:220px;}
+  .eco-card{background:var(--brand-gradient); border:none; color:#fff; display:flex; align-items:center; gap:24px; flex-wrap:wrap; padding:22px 24px; cursor:pointer; width:100%; font-family:inherit;}
+  .eco-text{flex:1; min-width:220px; text-align:left;}
   .eco-title{font-size:16px; font-weight:800; margin-bottom:3px;}
   .eco-sub{font-size:12.5px; opacity:.9;}
   .eco-stats{display:flex; gap:26px; flex-wrap:wrap;}
@@ -352,7 +364,7 @@
   .eco-stat b{font-family:"IBM Plex Mono"; font-size:20px; font-weight:700;}
   .eco-stat span{font-size:11.5px; opacity:.85;}
 
-  /* ---- transaction detail modal ---- */
+  /* ---- detail modal ---- */
   .modal-overlay{
     position:fixed; inset:0; background:rgba(15,14,20,.5); display:flex; align-items:center; justify-content:center;
     padding:20px; z-index:50; opacity:0; pointer-events:none; transition:opacity .15s ease;
@@ -386,6 +398,12 @@
   .modal-note svg{width:14px;height:14px; flex-shrink:0; margin-top:1px;}
   .modal-actions{display:flex; gap:8px;}
   .modal-actions button{flex:1;}
+  .modal-msg{font-size:12.5px; padding:9px 12px; border-radius:9px; margin-top:2px;}
+  .modal-msg.ok{background:var(--good-soft); color:var(--good);}
+  .modal-msg.err{background:var(--critical-soft); color:var(--critical);}
+  .modal-field{display:flex; flex-direction:column; gap:5px; margin-bottom:12px;}
+  .modal-field label{font-size:12px; font-weight:700; color:var(--ink-muted);}
+  .modal-field input{border:1px solid var(--line); background:var(--surface); border-radius:9px; padding:9px 12px; font:inherit; font-size:13.5px; color:var(--ink);}
 
   @media (max-width:900px){
     .sidebar{display:none;}
@@ -429,10 +447,10 @@
       <a class="navlink" href="#reimbursements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13l2 2 4-4"/></svg>Reimbursements</a>
       <a class="navlink" href="#eco-impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-1-7-5-7-10 3 0 6 1 7 4 1-3 4-4 7-4 0 5-3 9-7 10z"/></svg>Eco impact</a>
     </nav>
-    <div class="nav-eco">
+    <button type="button" class="nav-eco" id="sidebar-eco">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-1-7-5-7-10 3 0 6 1 7 4 1-3 4-4 7-4 0 5-3 9-7 10z"/></svg>
-      <div><b>142 receipts</b> gone paperless this month</div>
-    </div>
+      <div><b id="sidebar-eco-count">142 receipts</b> gone paperless this month</div>
+    </button>
   </aside>
 
   <div class="main">
@@ -450,7 +468,7 @@
 
       <div class="header">
         <div>
-          <div class="greet-title">Good evening, Meera</div>
+          <div class="greet-title" id="greet-title">Good evening</div>
           <div class="greet-sub">Here's what your receipts say about September</div>
         </div>
         <div class="header-right">
@@ -460,7 +478,7 @@
           </div>
           <div class="month-pill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-            September 2026
+            <span id="month-label">September 2026</span>
           </div>
           <div class="avatar">MK</div>
         </div>
@@ -468,8 +486,8 @@
 
       <div class="inbox">
         <div class="inbox-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg></div>
-        <div class="inbox-text"><b>12 new receipts</b> added this week<span>8 forwarded by email · 4 scanned by camera</span></div>
-        <button class="btn-add" type="button">
+        <div class="inbox-text"><b><span id="inbox-count">12</span> new receipts</b> added this week<span id="inbox-sub">8 forwarded by email · 4 scanned by camera</span></div>
+        <button class="btn-add" type="button" id="btn-add-receipt">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
           Add receipt
         </button>
@@ -496,6 +514,7 @@
           <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Your <b>Air Fryer</b> warranty (Best Buy) closes in <span class="c">6 days</span>, and 2 loyalty cards already have enough points to redeem.</div>
           <div class="ai-insight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>You're <b>$52 over</b> your dining budget and <b>$54 over</b> on shopping — want a plan to get back on track?</div>
         </div>
+        <div class="ai-answer" id="ai-answer"></div>
         <div class="ai-ask">
           <input type="text" id="ai-ask-input" placeholder="Ask about your spending, warranties or rewards…">
           <button type="button" id="ai-ask-btn">Ask</button>
@@ -512,36 +531,9 @@
     <section id="budgets">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Budgets</div><div class="card-sub">Monthly limits vs. what you've actually spent</div></div>
-          <a class="link" href="#">Edit budgets</a>
+          <div><div class="card-title">Budgets</div><div class="card-sub">Tap a category for the full breakdown</div></div>
         </div>
-        <div class="bar-list">
-          <div class="budget-row">
-            <div class="budget-top"><span class="budget-name">Groceries</span><span class="num budget-amt">$546 <span class="ink-muted">/ $550</span></span></div>
-            <div class="bar-track"><div class="bar-fill warning" style="width:99%"></div></div>
-            <div class="budget-foot"><span class="pill warning">99% used</span></div>
-          </div>
-          <div class="budget-row">
-            <div class="budget-top"><span class="budget-name">Dining out</span><span class="num budget-amt">$227 <span class="ink-muted">/ $175</span></span></div>
-            <div class="bar-track"><div class="bar-fill critical" style="width:100%"></div></div>
-            <div class="budget-foot"><span class="pill critical">30% over</span></div>
-          </div>
-          <div class="budget-row">
-            <div class="budget-top"><span class="budget-name">Shopping</span><span class="num budget-amt">$299 <span class="ink-muted">/ $245</span></span></div>
-            <div class="bar-track"><div class="bar-fill critical" style="width:100%"></div></div>
-            <div class="budget-foot"><span class="pill critical">22% over</span></div>
-          </div>
-          <div class="budget-row">
-            <div class="budget-top"><span class="budget-name">Transport &amp; fuel</span><span class="num budget-amt">$128 <span class="ink-muted">/ $140</span></span></div>
-            <div class="bar-track"><div class="bar-fill warning" style="width:91%"></div></div>
-            <div class="budget-foot"><span class="pill warning">91% used</span></div>
-          </div>
-          <div class="budget-row">
-            <div class="budget-top"><span class="budget-name">Subscriptions</span><span class="num budget-amt">$61 <span class="ink-muted">/ $70</span></span></div>
-            <div class="bar-track"><div class="bar-fill good" style="width:87%"></div></div>
-            <div class="budget-foot"><span class="pill good">On track</span></div>
-          </div>
-        </div>
+        <div class="bar-list" id="budgets-list"></div>
       </div>
     </section>
 
@@ -550,23 +542,17 @@
 
         <div class="card">
           <div class="card-head"><div><div class="card-title">Groceries &amp; food this month</div><div class="card-sub">$773 total · 52% of monthly spend</div></div></div>
-          <div class="bar-list">
-            <div><div class="bar-row-top"><span class="bar-row-name">Dining out <span class="bar-row-meta">DoorDash, Uber Eats</span></span><span class="num">$227</span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
-            <div><div class="bar-row-top"><span class="bar-row-name">Pantry &amp; staples</span><span class="num">$209</span></div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div>
-            <div><div class="bar-row-top"><span class="bar-row-name">Produce &amp; dairy</span><span class="num">$144</span></div><div class="bar-track"><div class="bar-fill" style="width:63%"></div></div></div>
-            <div><div class="bar-row-top"><span class="bar-row-name">Meat &amp; protein</span><span class="num">$118</span></div><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div></div>
-            <div><div class="bar-row-top"><span class="bar-row-name">Snacks &amp; beverages</span><span class="num">$75</span></div><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div></div>
-          </div>
+          <div class="bar-list" id="grocery-bars"></div>
         </div>
 
         <div class="card">
-          <div class="card-head"><div><div class="card-title" id="cat-title">Spending by category</div><div class="card-sub" id="cat-sub">Personal · September 2026</div></div><a class="link" href="#">See all tags</a></div>
+          <div class="card-head"><div><div class="card-title" id="cat-title">Spending by category</div><div class="card-sub" id="cat-sub">Personal · September 2026</div></div></div>
           <div class="bar-list" id="category-bars"></div>
         </div>
 
         <section id="transactions">
         <div class="card">
-          <div class="card-head"><div><div class="card-title">Recent transactions</div><div class="card-sub">Tap any receipt for the full breakdown</div></div><a class="link" href="#">View all</a></div>
+          <div class="card-head"><div><div class="card-title">Recent transactions</div><div class="card-sub">Tap any receipt for the full breakdown</div></div></div>
           <div class="txn-list" id="txn-list"></div>
         </div>
         </section>
@@ -577,60 +563,27 @@
 
         <section id="warranties">
         <div class="card">
-          <div class="card-head"><div class="card-title">Warranties</div><a class="link" href="#">All 7</a></div>
-          <div class="item-list">
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div><div><div class="item-name">Air Fryer</div><div class="item-sub">Best Buy · bought Sep 30, 2025</div></div></div><span class="pill critical">6 days left</span></div><div class="item-note">Warranty ends <b>Sep 30, 2026</b></div></div>
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#F96302"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v5M16 3v5"/><path d="M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v3"/></svg></div><div><div class="item-name">Washing Machine</div><div class="item-sub">Home Depot · bought Oct 5, 2024</div></div></div><span class="pill warning">11 days left</span></div><div class="item-note">Warranty ends <b>Oct 5, 2026</b></div></div>
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#FF9900"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></svg></div><div><div class="item-name">Laptop</div><div class="item-sub">Amazon · bought Feb 14, 2026</div></div></div><span class="pill good">143 days left</span></div><div class="item-note">Warranty ends <b>Feb 14, 2027</b></div></div>
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div><div><div class="item-name">Wireless Earbuds</div><div class="item-sub">Best Buy · bought Sep 18, 2026</div></div></div><span class="pill good">359 days left</span></div><div class="item-note">Warranty ends <b>Sep 18, 2027</b></div></div>
-          </div>
+          <div class="card-head"><div class="card-title">Warranties</div><div class="card-sub" id="warranties-count">7 tracked</div></div>
+          <div class="item-list" id="warranties-list"></div>
         </div>
         </section>
 
         <section id="returns">
         <div class="card">
           <div class="card-head"><div class="card-title">Returns closing soon</div></div>
-          <div class="item-list">
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#E21A2C"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.015.624L9.19 9.293H0l7.445 5.384-2.819 8.673L12 17.986l7.422 5.393-2.835-8.713L24 9.292h-9.162L12.015.622v.002z"/></svg></div><div><div class="item-name">Sweater Set</div><div class="item-sub">Macy's · delivered Sep 22</div></div></div><span class="pill warning">5 days left</span></div><div class="item-note">Return window ends <b>Sep 29, 2026</b></div><div class="item-actions"><button class="mini-btn solid" type="button">Start return</button></div></div>
-            <div class="item"><div class="item-top"><div class="item-top-left"><div class="merchant-mark sm" style="color:#FF9900"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></svg></div><div><div class="item-name">Bluetooth Speaker</div><div class="item-sub">Amazon · delivered Sep 20</div></div></div><span class="pill warning">6 days left</span></div><div class="item-note">Return window ends <b>Sep 30, 2026</b></div><div class="item-actions"><button class="mini-btn solid" type="button">Start return</button></div></div>
-          </div>
+          <div class="item-list" id="returns-list"></div>
         </div>
         </section>
 
         <section id="loyalty">
         <div class="card">
           <div class="card-head"><div class="card-title">Loyalty cards</div></div>
-          <div class="loy-list">
-            <div class="loy-card">
-              <div class="merchant-mark loy-mark" style="color:#CC0000"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.0005 0C18.627 0 24 5.373 24 12.0005 24 18.627 18.627 24 11.9995 24 5.373 24 0 18.627 0 11.9995 0 5.373 5.373 0 12.0005 0zm0 19.826a7.8265 7.8265 0 10-.001-15.652C7.7133 4.2246 4.2653 7.7136 4.2653 12c0 4.2864 3.448 7.7754 7.7342 7.826h.001zm0-3.9853a3.8402 3.8402 0 110-7.6803c2.1204.0006 3.839 1.7197 3.839 3.8401s-1.7186 3.8396-3.839 3.8402z"/></svg></div>
-              <div class="loy-mid"><div class="loy-name">Target Circle</div><div class="loy-tier">Green tier</div></div>
-              <div class="loy-pts num">1,240<span>points</span></div>
-            </div>
-            <div class="loy-card">
-              <div class="merchant-mark loy-mark" style="color:#2E77BC"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.015 14.378c0-.32-.135-.496-.344-.622-.21-.12-.464-.135-.81-.135h-1.543v2.82h.675v-1.027h.72c.24 0 .39.024.478.125.12.13.104.38.104.55v.35h.66v-.555c-.002-.25-.017-.376-.108-.516-.06-.08-.18-.18-.33-.234l.02-.008c.18-.072.48-.297.48-.747zm-.87.407l-.028-.002c-.09.053-.195.058-.33.058h-.81v-.63h.824c.12 0 .24 0 .33.05.098.048.156.147.15.255 0 .12-.045.215-.134.27zM20.297 15.837H19v.6h1.304c.676 0 1.05-.278 1.05-.884 0-.28-.066-.448-.187-.582-.153-.133-.392-.193-.73-.207l-.376-.015c-.104 0-.18 0-.255-.03-.09-.03-.15-.105-.15-.21 0-.09.017-.166.09-.21.083-.046.177-.066.272-.06h1.23v-.602h-1.35c-.704 0-.958.437-.958.84 0 .9.776.855 1.407.87.104 0 .18.015.225.06.046.03.082.106.082.18 0 .077-.035.15-.08.18-.06.053-.15.07-.277.07zM0 0v10.096L.81 8.22h1.75l.225.464V8.22h2.043l.45 1.02.437-1.013h6.502c.295 0 .56.057.756.236v-.23h1.787v.23c.307-.17.686-.23 1.12-.23h2.606l.24.466v-.466h1.918l.254.465v-.466h1.858v3.948H20.87l-.36-.6v.585h-2.353l-.256-.63h-.583l-.27.614h-1.213c-.48 0-.84-.104-1.08-.24v.24h-2.89v-.884c0-.12-.03-.12-.105-.135h-.105v1.036H6.067v-.48l-.21.48H4.69l-.202-.48v.465H2.235l-.256-.624H1.4l-.256.624H0V24h23.786v-7.108c-.27.135-.613.18-.973.18H21.09v-.255c-.21.165-.57.255-.914.255H14.71v-.9c0-.12-.018-.12-.12-.12h-.075v1.022h-1.8v-1.066c-.298.136-.643.15-.928.136h-.214v.915h-2.18l-.54-.617-.57.6H4.742v-3.93h3.61l.518.602.554-.6h2.412c.28 0 .74.03.942.225v-.24h2.177c.202 0 .644.045.903.225v-.24h3.265v.24c.163-.164.508-.24.803-.24h1.89v.24c.194-.15.464-.24.84-.24h1.176V0H0zM21.156 14.955c.004.005.006.012.01.016.01.01.024.01.032.02l-.042-.035zM23.828 13.082h.065v.555h-.065zM23.865 15.03v-.005c-.03-.025-.046-.048-.075-.07-.15-.153-.39-.215-.764-.225l-.36-.012c-.12 0-.194-.007-.27-.03-.09-.03-.15-.105-.15-.21 0-.09.03-.16.09-.204.076-.045.15-.05.27-.05h1.223v-.588h-1.283c-.69 0-.96.437-.96.84 0 .9.78.855 1.41.87.104 0 .18.015.224.06.046.03.076.106.076.18 0 .07-.034.138-.09.18-.045.056-.136.07-.27.07h-1.288v.605h1.287c.42 0 .734-.118.9-.36h.03c.09-.134.135-.3.135-.523 0-.24-.045-.39-.135-.526zM18.597 14.208v-.583h-2.235V16.458h2.235v-.585h-1.57v-.57h1.533v-.584h-1.532v-.51M13.51 8.787h.685V11.6h-.684zM13.126 9.543l-.007.006c0-.314-.13-.5-.34-.624-.217-.125-.47-.135-.81-.135H10.43v2.82h.674v-1.034h.72c.24 0 .39.03.487.12.122.136.107.378.107.548v.354h.677v-.553c0-.25-.016-.375-.11-.516-.09-.107-.202-.19-.33-.237.172-.07.472-.3.472-.75zm-.855.396h-.015c-.09.054-.195.056-.33.056H11.1v-.623h.825c.12 0 .24.004.33.05.09.04.15.128.15.25s-.047.22-.134.266zM15.92 9.373h.632v-.6h-.644c-.464 0-.804.105-1.02.33-.286.3-.362.69-.362 1.11 0 .512.123.833.36 1.074.232.238.645.31.97.31h.78l.255-.627h1.39l.262.627h1.36v-2.11l1.272 2.11h.95l.002.002V8.786h-.684v1.963l-1.18-1.96h-1.02V11.4L18.11 8.744h-1.004l-.943 2.22h-.3c-.177 0-.362-.03-.468-.134-.125-.15-.186-.36-.186-.662 0-.285.08-.51.194-.63.133-.135.272-.165.516-.165zm1.668-.108l.464 1.118v.002h-.93l.466-1.12zM2.38 10.97l.254.628H4V9.393l.972 2.205h.584l.973-2.202.015 2.202h.69v-2.81H6.118l-.807 1.904-.876-1.905H3.343v2.663L2.205 8.787h-.997L.01 11.597h.72l.26-.626h1.39zm-.688-1.705l.46 1.118-.003.002h-.915l.457-1.12zM11.856 13.62H9.714l-.85.923-.825-.922H5.346v2.82H8l.855-.932.824.93h1.302v-.94h.838c.6 0 1.17-.164 1.17-.945l-.006-.003c0-.78-.598-.93-1.128-.93zM7.67 15.853l-.014-.002H6.02v-.557h1.47v-.574H6.02v-.51H7.7l.733.82-.764.824zm2.642.33l-1.03-1.147 1.03-1.108v2.253zm1.553-1.258h-.885v-.717h.885c.24 0 .42.098.42.344 0 .243-.15.372-.42.372zM9.967 9.373v-.586H7.73V11.6h2.237v-.58H8.4v-.564h1.527V9.88H8.4v-.507"/></svg></div>
-              <div class="loy-mid"><div class="loy-name">American Express</div><div class="loy-tier">Silver tier</div></div>
-              <div class="loy-pts num">3,860<span>points</span></div>
-            </div>
-            <div class="loy-card">
-              <div class="merchant-mark loy-mark" style="color:#0046BE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div>
-              <div class="loy-mid"><div class="loy-name">My Best Buy</div><div class="loy-tier">Blue tier</div></div>
-              <div class="loy-pts num">620<span>points</span></div>
-            </div>
-            <div class="loy-card">
-              <div class="merchant-mark loy-mark" style="color:#FF3008"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.071 8.409a6.09 6.09 0 00-5.396-3.228H.584A.589.589 0 00.17 6.184L3.894 9.93a1.752 1.752 0 001.242.516h12.049a1.554 1.554 0 11.031 3.108H8.91a.589.589 0 00-.415 1.003l3.725 3.747a1.75 1.75 0 001.242.516h3.757c4.887 0 8.584-5.225 5.852-10.413"/></svg></div>
-              <div class="loy-mid"><div class="loy-name">DashPass</div><div class="loy-tier">Renews Nov 2, 2026</div></div>
-              <div class="loy-pts num">Active</div>
-            </div>
-          </div>
+          <div class="loy-list" id="loyalty-list"></div>
         </div>
 
         <div class="card">
           <div class="card-head"><div class="card-title">Rewards you can redeem</div></div>
-          <div class="item-list">
-            <div class="reward"><div class="reward-top"><span class="reward-name">$18 Amex statement credit</span><span class="pill good">Ready</span></div><div class="reward-track"><div class="reward-fill" style="width:100%"></div></div><div class="reward-meta num">3,860 / 3,000 points</div></div>
-            <div class="reward"><div class="reward-top"><span class="reward-name">$25 off at Best Buy</span><span class="pill good">Ready</span></div><div class="reward-track"><div class="reward-fill" style="width:100%"></div></div><div class="reward-meta num">620 / 500 points</div></div>
-            <div class="reward"><div class="reward-top"><span class="reward-name">Target $12 gift card</span><span class="reward-meta" style="font-size:11.5px; margin:0">260 to go</span></div><div class="reward-track"><div class="reward-fill" style="width:83%; background:var(--blue)"></div></div><div class="reward-meta num">1,240 / 1,500 points</div></div>
-          </div>
+          <div class="item-list" id="rewards-list"></div>
         </div>
         </section>
 
@@ -641,48 +594,20 @@
       <section id="split-bills">
       <div class="card">
         <div class="card-head"><div class="card-title">Split bills</div></div>
-        <div class="split-summary"><span>You're owed <b class="good-text">$142</b></span><span>You owe <b class="critical-text">$17</b></span></div>
-        <div class="item-list">
-          <div class="bill">
-            <div class="bill-top"><div><div class="bill-name">Miami trip — hotel</div><div class="bill-sub">Split with Aditi, Rohan, Priya</div></div><div class="bill-amt owed num">+$110</div></div>
-            <div class="bill-foot"><span class="bill-progress">2 of 3 paid</span><button class="mini-btn" type="button">Remind</button></div>
-          </div>
-          <div class="bill">
-            <div class="bill-top"><div><div class="bill-name">Dinner at Cheesecake Factory</div><div class="bill-sub">Split with Rohan, Priya</div></div><div class="bill-amt owed num">+$32</div></div>
-            <div class="bill-foot"><span class="bill-progress">1 of 2 paid</span><button class="mini-btn" type="button">Remind</button></div>
-          </div>
-          <div class="bill">
-            <div class="bill-top"><div><div class="bill-name">Apartment groceries</div><div class="bill-sub">Split with Ananya</div></div><div class="bill-amt owe num">−$17</div></div>
-            <div class="bill-foot"><span class="bill-progress">Requested Sep 20</span><button class="mini-btn solid" type="button">Pay now</button></div>
-          </div>
-        </div>
+        <div class="split-summary" id="split-summary"></div>
+        <div class="item-list" id="split-bills-list"></div>
       </div>
       </section>
 
       <section id="reimbursements">
       <div class="card">
         <div class="card-head"><div><div class="card-title">Reimbursements</div><div class="card-sub">Business receipts pending your company</div></div></div>
-        <div class="re-row">
-          <div class="re-mid"><div class="re-name">Client lunch — Panera Bread</div><div class="re-meta">Sep 19 · Client meals</div></div>
-          <div class="re-right"><div class="re-amt num">$81</div><span class="pill warning">Pending</span></div>
-        </div>
-        <div class="re-row">
-          <div class="re-mid"><div class="re-name">Team dinner — Cheesecake Factory</div><div class="re-meta">Sep 14 · Client meals</div></div>
-          <div class="re-right"><div class="re-amt num">$64</div><span class="pill warning">Pending</span></div>
-        </div>
-        <div class="re-row">
-          <div class="re-mid"><div class="re-name">Uber to client site</div><div class="re-meta">Sep 17 · Travel</div></div>
-          <div class="re-right"><div class="re-amt num">$22</div><span class="pill info">Approved</span></div>
-        </div>
-        <div class="re-row">
-          <div class="re-mid"><div class="re-name">Figma subscription</div><div class="re-meta">Sep 5 · Software</div></div>
-          <div class="re-right"><div class="re-amt num">$51</div><span class="pill good">Reimbursed</span></div>
-        </div>
+        <div id="reimbursements-list"></div>
         <div class="re-total">
           <div class="re-total-label">Pending total</div>
           <div style="display:flex; align-items:center; gap:10px;">
-            <span class="num" style="font-weight:700;">$145</span>
-            <button class="btn-export" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>Export report</button>
+            <span class="num" id="reimb-total" style="font-weight:700;">$0</span>
+            <a class="btn-export" href="/api/reimbursements/export" id="btn-export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>Export report</a>
           </div>
         </div>
       </div>
@@ -690,17 +615,13 @@
     </div>
 
     <section id="eco-impact">
-      <div class="card eco-card">
+      <button type="button" class="card eco-card" id="eco-card">
         <div class="eco-text">
           <div class="eco-title">Your paperless impact</div>
           <div class="eco-sub">Every scanned or forwarded receipt skips the printed slip.</div>
         </div>
-        <div class="eco-stats">
-          <div class="eco-stat"><b class="num">142</b><span>receipts saved</span></div>
-          <div class="eco-stat"><b class="num">1.3 lb</b><span>paper saved</span></div>
-          <div class="eco-stat"><b class="num">2.4 lb</b><span>CO₂ avoided</span></div>
-        </div>
-      </div>
+        <div class="eco-stats" id="eco-stats"></div>
+      </button>
     </section>
 
   </div>
@@ -720,31 +641,31 @@
     </div>
     <div class="modal-body">
       <div class="modal-items" id="modal-items"></div>
-      <div class="modal-total"><span>Total paid</span><span class="num" id="modal-total"></span></div>
+      <div class="modal-total" id="modal-total-row"><span id="modal-total-label">Total paid</span><span class="num" id="modal-total"></span></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-pay"><span>Payment method</span><span class="num" id="modal-pay"></span></div>
+      <div class="modal-pay" id="modal-pay-row"><span>Payment method</span><span class="num" id="modal-pay"></span></div>
       <a class="modal-note" id="modal-note" href="#warranties" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>
         <span id="modal-note-text"></span>
       </a>
-      <div class="modal-actions">
-        <button class="mini-btn" type="button">View original receipt</button>
-        <button class="mini-btn" type="button">Flag an issue</button>
-      </div>
+      <div id="modal-msg-slot"></div>
+      <div class="modal-actions" id="modal-actions"></div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  /* Custom store icons (used where no open-licensed brand mark is available) */
+  /* ---------------- icon / logo marks ---------------- */
   var ICONS = {
     cart:'<path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',
     headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/>',
-    plus:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/>'
+    plus:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/>',
+    plug:'<path d="M8 3v5M16 3v5"/><path d="M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v3"/>',
+    hanger:'<path d="M6 8h12l1.5 12a2 2 0 0 1-2 2.2H6.5a2 2 0 0 1-2-2.2z"/><path d="M9 8a3 3 0 0 1 6 0"/>',
+    info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/>'
   };
-  /* Real brand marks — Simple Icons (simpleicons.org), CC0/MIT-licensed for exactly this use */
   var LOGOS = {
     netflix:'<path d="m5.398 0 8.348 23.602c2.346.059 4.856.398 4.856.398L10.113 0H5.398zm8.489 0v9.172l4.715 13.33V0h-4.715zM5.398 1.5V24c1.873-.225 2.81-.312 4.715-.398V14.83L5.398 1.5z"/>',
     doordash:'<path d="M23.071 8.409a6.09 6.09 0 00-5.396-3.228H.584A.589.589 0 00.17 6.184L3.894 9.93a1.752 1.752 0 001.242.516h12.049a1.554 1.554 0 11.031 3.108H8.91a.589.589 0 00-.415 1.003l3.725 3.747a1.75 1.75 0 001.242.516h3.757c4.887 0 8.584-5.225 5.852-10.413"/>',
@@ -758,147 +679,80 @@
     var idAttr = id ? ' id="'+id+'"' : '';
     var svg = kind==='logo'
       ? '<svg viewBox="0 0 24 24" fill="currentColor">'+LOGOS[glyph]+'</svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">'+ICONS[glyph]+'</svg>';
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">'+(ICONS[glyph]||ICONS.info)+'</svg>';
     return '<div class="merchant-mark"'+idAttr+' style="color:'+color+'">'+svg+'</div>';
   }
+  function fmt(n){ return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: (n%1!==0?2:0), maximumFractionDigits:2}); }
+  function esc(s){ return String(s==null?'':s); }
 
-  var TX = [
-    { id:'target', store:'Target', category:'Groceries', date:'Sep 22, 2026', kind:'logo', glyph:'target', color:'#CC0000',
-      payment:'Debit card •• 4187', total:'$86.00',
-      items:[{n:'Organic jasmine rice, 5 lb',q:'',p:'$6.49'},{n:'Canned black beans',q:'× 4',p:'$4.29'},{n:'Whole milk',q:'3 × 1 gal',p:'$11.97'},{n:'Olive oil, 1 L',q:'',p:'$8.99'},{n:'+14 more items',q:'',p:'$54.26'}] },
-    { id:'doordash', store:'DoorDash', category:'Dining out', date:'Sep 21, 2026', kind:'logo', glyph:'doordash', color:'#FF3008',
-      payment:'Apple Pay', total:'$24.00',
-      items:[{n:'Bacon cheeseburger',q:'1',p:'$10.49'},{n:'Fries',q:'1',p:'$3.49'},{n:'Delivery &amp; service fee',q:'',p:'$4.99'},{n:'Tip',q:'',p:'$3.00'},{n:'Taxes',q:'',p:'$2.03'}] },
-    { id:'bestbuy', store:'Best Buy', category:'Electronics', date:'Sep 18, 2026', kind:'icon', glyph:'headphones', color:'#0046BE',
-      payment:'Credit card •• 4412', total:'$149.00',
-      items:[{n:'Sony WF wireless earbuds',q:'1',p:'$149.00'}],
-      note:'Warranty tracked · ends Sep 18, 2027' },
-    { id:'cvs', store:'CVS Pharmacy', category:'Health', date:'Sep 17, 2026', kind:'icon', glyph:'plus', color:'#E31837',
-      payment:'Debit card •• 2209', total:'$34.00',
-      items:[{n:'Vitamin D3',q:'1 bottle',p:'$11.99'},{n:'Pain reliever',q:'× 2',p:'$7.98'},{n:'Daily multivitamin',q:'1',p:'$14.03'}] },
-    { id:'instacart', store:'Instacart', category:'Groceries', date:'Sep 15, 2026', kind:'logo', glyph:'instacart', color:'#43B02A',
-      payment:'Apple Pay', total:'$79.00',
-      items:[{n:'Fruits &amp; vegetables',q:'',p:'$28.40'},{n:'Dairy &amp; bread',q:'',p:'$19.60'},{n:'Pantry staples',q:'',p:'$22.00'},{n:'+18 more items',q:'',p:'$9.00'}] },
-    { id:'netflix', store:'Netflix', category:'Subscription', date:'Sep 12, 2026', kind:'logo', glyph:'netflix', color:'#E50914',
-      payment:'Auto-debit card •• 7788', total:'$15.49',
-      items:[{n:'Standard plan (with ads)',q:'Monthly',p:'$15.49'}] }
-  ];
+  /* ---------------- app state ---------------- */
+  var DATA = null;
+  var MODE = 'personal';
 
-  var txnList = document.getElementById('txn-list');
-  txnList.innerHTML = TX.map(function(t){
-    return '<div class="txn-row" tabindex="0" role="button" data-tx="'+t.id+'" aria-haspopup="dialog">'
-      + mark(t.kind, t.glyph, t.color)
-      + '<div class="txn-mid"><div class="txn-store">'+t.store+'</div><div class="txn-meta"><span class="tag">'+t.category+'</span> '+t.date.replace(', 2026','')+'</div></div>'
-      + '<div class="txn-amt num">'+t.total+'</div>'
-      + '<svg class="txn-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>'
-      + '</div>';
-  }).join('');
-
-  var overlay = document.getElementById('modal-overlay');
-  function openModal(id){
-    var t = TX.filter(function(x){return x.id===id;})[0];
-    if(!t) return;
-    document.getElementById('modal-mark').outerHTML = mark(t.kind, t.glyph, t.color, 'modal-mark');
-    document.getElementById('modal-store').textContent = t.store;
-    document.getElementById('modal-meta').textContent = t.date + ' · ' + t.category;
-    document.getElementById('modal-items').innerHTML = t.items.map(function(it){
-      return '<div class="modal-item-row"><span>'+it.n+'<span class="modal-item-qty">'+it.q+'</span></span><span class="num">'+it.p+'</span></div>';
-    }).join('');
-    document.getElementById('modal-total').textContent = t.total;
-    document.getElementById('modal-pay').textContent = t.payment;
-    var note = document.getElementById('modal-note');
-    if(t.note){ note.style.display='flex'; document.getElementById('modal-note-text').textContent = t.note; }
-    else { note.style.display='none'; }
-    overlay.classList.add('open');
+  function api(path, opts){
+    opts = opts || {};
+    return fetch(path, Object.assign({ headers: {'Content-Type':'application/json'} }, opts))
+      .then(function(r){ return r.json().catch(function(){return {};}).then(function(body){ return {ok:r.ok, status:r.status, body:body}; }); });
   }
-  function closeModal(){ overlay.classList.remove('open'); }
 
-  txnList.addEventListener('click', function(e){
-    var row = e.target.closest('.txn-row');
-    if(row) openModal(row.getAttribute('data-tx'));
-  });
-  txnList.addEventListener('keydown', function(e){
-    if(e.key==='Enter' || e.key===' '){
-      var row = e.target.closest('.txn-row');
-      if(row){ e.preventDefault(); openModal(row.getAttribute('data-tx')); }
-    }
-  });
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
-  document.getElementById('modal-note').addEventListener('click', closeModal);
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
-
-  var MODES = {
-    personal: {
-      stats: [
-        {label:"Spent this month", value:"$1,500", delta:"12% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)", ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 15l6-6 6 6"/></svg>', ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
-        {label:"Saved via cashback", value:"$108", delta:"8% vs August", cls:"down", bg:"var(--good-soft)", fg:"var(--good)", ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>', ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>'},
-        {label:"Active warranties", value:"7", delta:"2 expiring within 2 weeks", cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>'},
-        {label:"Returns closing soon", value:"2", delta:"Next window closes in 5 days", cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-1"/></svg>'}
-      ],
-      catTitle:"Spending by category", catSub:"Personal · September 2026",
-      categories:[
-        {name:"Groceries &amp; food", amount:773}, {name:"Electronics", amount:299},
-        {name:"Home &amp; utilities", amount:135}, {name:"Transport &amp; fuel", amount:128},
-        {name:"Health &amp; pharmacy", amount:104}, {name:"Subscriptions", amount:61}
-      ],
-      trendSub:"Personal · last 6 months",
-      trend:[{m:"Apr",v:1170},{m:"May",v:1246},{m:"Jun",v:1222},{m:"Jul",v:1298},{m:"Aug",v:1339},{m:"Sep",v:1500}]
-    },
-    business: {
-      stats: [
-        {label:"Spent this month", value:"$617", delta:"4% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
-        {label:"Pending reimbursement", value:"$145", delta:"2 receipts pending", cls:"flat", bg:"var(--warning-soft)", fg:"var(--warning)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13l2 2 4-4"/></svg>'},
-        {label:"Receipts tagged business", value:"23", delta:"This month", cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
-        {label:"Awaiting approval", value:"3", delta:"Avg. 2 days to approve", cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", ic2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>'}
-      ],
-      catTitle:"Spending by category", catSub:"Business · September 2026",
-      categories:[
-        {name:"Client meals &amp; entertainment", amount:210}, {name:"Travel &amp; transport", amount:185},
-        {name:"Software &amp; subscriptions", amount:105}, {name:"Office supplies", amount:82},
-        {name:"Coworking &amp; venue", amount:35}
-      ],
-      trendSub:"Business · last 6 months",
-      trend:[{m:"Apr",v:480},{m:"May",v:535},{m:"Jun",v:545},{m:"Jul",v:572},{m:"Aug",v:593},{m:"Sep",v:617}]
-    }
-  };
-
-  function fmt(n){ return '$' + n.toLocaleString('en-US'); }
-
-  function renderStats(mode){
-    var m = MODES[mode];
-    document.getElementById('stats-grid').innerHTML = m.stats.map(function(s){
-      var deltaIcon = s.ic ? s.ic : "";
-      return '<div class="stat">'
-        + '<div class="stat-icon" style="background:'+s.bg+'; color:'+s.fg+'">'+s.ic2+'</div>'
-        + '<div class="stat-label">'+s.label+'</div>'
-        + '<div class="stat-value num">'+s.value+'</div>'
-        + '<div class="stat-delta '+s.cls+'">'+deltaIcon+' '+s.delta+'</div>'
-        + '</div>';
+  /* ---------------- overview: stats / categories / trend ---------------- */
+  function renderStats(){
+    var p = DATA[MODE].stats;
+    var tiles = MODE==='personal' ? [
+      {label:"Spent this month", value:fmt(p.spent), delta:p.spentDeltaPct+"% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)",
+        arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 15l6-6 6 6"/></svg>',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+      {label:"Saved via cashback", value:fmt(p.saved), delta:p.savedDeltaPct+"% vs August", cls:"down", bg:"var(--good-soft)", fg:"var(--good)",
+        arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>'},
+      {label:"Active warranties", value:String(p.activeWarranties), delta:p.warrantiesNote, cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>'},
+      {label:"Returns closing soon", value:String(p.returnsClosing), delta:p.returnsNote, cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-1"/></svg>'}
+    ] : [
+      {label:"Spent this month", value:fmt(p.spent), delta:p.spentDeltaPct+"% vs August", cls:"up", bg:"var(--pink-soft)", fg:"var(--pink)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+      {label:"Pending reimbursement", value:fmt(p.pendingReimbursement), delta:p.pendingNote, cls:"flat", bg:"var(--warning-soft)", fg:"var(--warning)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13l2 2 4-4"/></svg>'},
+      {label:"Receipts tagged business", value:String(p.receiptsTagged), delta:"This month", cls:"flat", bg:"var(--blue-soft)", fg:"var(--blue)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg>'},
+      {label:"Awaiting approval", value:String(p.awaitingApproval), delta:"Avg. 2 days to approve", cls:"flat", bg:"var(--purple-soft)", fg:"var(--purple)", arrow:'',
+        icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>'}
+    ];
+    document.getElementById('stats-grid').innerHTML = tiles.map(function(s){
+      return '<div class="stat"><div class="stat-icon" style="background:'+s.bg+'; color:'+s.fg+'">'+s.icon+'</div>'
+        + '<div class="stat-label">'+s.label+'</div><div class="stat-value num">'+s.value+'</div>'
+        + '<div class="stat-delta '+s.cls+'">'+s.arrow+' '+s.delta+'</div></div>';
     }).join('');
   }
 
-  function renderCategories(mode){
-    var m = MODES[mode];
-    var max = Math.max.apply(null, m.categories.map(function(c){return c.amount;}));
-    var total = m.categories.reduce(function(a,c){return a+c.amount;},0);
-    document.getElementById('category-bars').innerHTML = m.categories.map(function(c){
+  function renderCategories(){
+    var cats = DATA[MODE].categories;
+    var max = Math.max.apply(null, cats.map(function(c){return c.amount;}));
+    var total = cats.reduce(function(a,c){return a+c.amount;},0);
+    document.getElementById('category-bars').innerHTML = cats.map(function(c){
       var pct = Math.round((c.amount/max)*100);
       return '<div><div class="bar-row-top"><span class="bar-row-name">'+c.name+'</span><span class="num">'+fmt(c.amount)+'</span></div>'
         + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div></div>';
     }).join('') + '<div class="bar-total"><span>Total</span><span class="num">'+fmt(total)+'</span></div>';
-    document.getElementById('cat-title').textContent = m.catTitle;
-    document.getElementById('cat-sub').textContent = m.catSub;
+    document.getElementById('cat-sub').textContent = (MODE==='personal'?'Personal':'Business') + ' · ' + DATA.meta.month;
+  }
+
+  function renderGrocery(){
+    var items = DATA.grocery;
+    var max = Math.max.apply(null, items.map(function(c){return c.amount;}));
+    document.getElementById('grocery-bars').innerHTML = items.map(function(c){
+      var pct = Math.round((c.amount/max)*100);
+      var meta = c.meta ? ' <span class="bar-row-meta">'+c.meta+'</span>' : '';
+      return '<div><div class="bar-row-top"><span class="bar-row-name">'+c.name+meta+'</span><span class="num">'+fmt(c.amount)+'</span></div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join('');
   }
 
   var trendVH = 180;
-  function renderTrend(mode){
-    var m = MODES[mode];
-    var data = m.trend;
-    document.getElementById('trend-sub').textContent = m.trendSub;
-    /* viewBox width matches the container's real rendered width, so the
-       SVG maps 1:1 to CSS pixels — no non-uniform stretch, no distorted
-       circles/text. */
+  function renderTrend(){
+    var data = DATA[MODE].trend;
+    document.getElementById('trend-sub').textContent = (MODE==='personal'?'Personal':'Business') + ' · last 6 months';
     var w = Math.max(document.getElementById('trend-chart').clientWidth, 280);
     var leftPad=16, rightPad=16, n=data.length;
     var step=(w-leftPad-rightPad)/(n-1);
@@ -918,51 +772,401 @@
         + '<text class="trend-label" x="'+p.x+'" y="'+(trendVH-14)+'" text-anchor="middle">'+p.m+'</text>'
         + '<circle class="trend-hit" data-m="'+p.m+'" data-v="'+p.v+'" cx="'+p.x+'" cy="'+p.y+'" r="14"></circle>';
     }).join('');
-    var svg = '<svg viewBox="0 0 '+w+' '+trendVH+'">'
+    document.getElementById('trend-chart').innerHTML = '<svg viewBox="0 0 '+w+' '+trendVH+'">'
       + '<line class="trend-grid" x1="'+leftPad+'" y1="'+baseline+'" x2="'+(w-rightPad)+'" y2="'+baseline+'"></line>'
-      + '<path class="trend-area" d="'+areaPath+'"></path>'
-      + '<path class="trend-line" d="'+linePath+'"></path>'
-      + dots
-      + '<text class="trend-value" x="'+last.x+'" y="'+(last.y-14)+'" text-anchor="end">'+fmt(last.v)+'</text>'
-      + '</svg>';
-    document.getElementById('trend-chart').innerHTML = svg;
+      + '<path class="trend-area" d="'+areaPath+'"></path>' + '<path class="trend-line" d="'+linePath+'"></path>' + dots
+      + '<text class="trend-value" x="'+last.x+'" y="'+(last.y-14)+'" text-anchor="end">'+fmt(last.v)+'</text></svg>';
   }
   var trendResizeTimer;
   window.addEventListener('resize', function(){
     clearTimeout(trendResizeTimer);
-    trendResizeTimer = setTimeout(function(){
-      renderTrend(document.getElementById('tab-business').classList.contains('active') ? 'business' : 'personal');
-    }, 120);
+    trendResizeTimer = setTimeout(renderTrend, 120);
   });
-
-  var trendContainer = document.getElementById('trend-chart');
-  var tip = document.getElementById('trend-tip');
-  function positionTip(t){
-    var rect = t.getBoundingClientRect();
-    var parentRect = trendContainer.closest('.card').getBoundingClientRect();
-    tip.style.left = (rect.left - parentRect.left + rect.width/2) + 'px';
-    tip.style.top = (rect.top - parentRect.top) + 'px';
+  var trendContainer, trendTip;
+  function wireTrendHover(){
+    trendContainer = document.getElementById('trend-chart');
+    trendTip = document.getElementById('trend-tip');
+    function positionTip(t){
+      var rect = t.getBoundingClientRect();
+      var parentRect = trendContainer.closest('.card').getBoundingClientRect();
+      trendTip.style.left = (rect.left - parentRect.left + rect.width/2) + 'px';
+      trendTip.style.top = (rect.top - parentRect.top) + 'px';
+    }
+    trendContainer.addEventListener('mouseover', function(e){
+      var t = e.target.closest('.trend-hit'); if(!t) return;
+      trendTip.textContent = t.getAttribute('data-m') + ' · ' + fmt(Number(t.getAttribute('data-v')));
+      trendTip.style.display='block'; positionTip(t);
+    });
+    trendContainer.addEventListener('mousemove', function(e){ var t=e.target.closest('.trend-hit'); if(t) positionTip(t); });
+    trendContainer.addEventListener('mouseout', function(e){ var t=e.target.closest('.trend-hit'); if(t) trendTip.style.display='none'; });
   }
-  trendContainer.addEventListener('mouseover', function(e){
-    var t = e.target.closest('.trend-hit');
-    if(!t) return;
-    tip.textContent = t.getAttribute('data-m') + ' · ' + fmt(Number(t.getAttribute('data-v')));
-    tip.style.display='block';
-    positionTip(t);
-  });
-  trendContainer.addEventListener('mousemove', function(e){
-    var t = e.target.closest('.trend-hit');
-    if(t) positionTip(t);
-  });
-  trendContainer.addEventListener('mouseout', function(e){
-    var t = e.target.closest('.trend-hit');
-    if(t) tip.style.display='none';
-  });
 
+  /* ---------------- budgets ---------------- */
+  function budgetStatus(spent, budget){
+    var pct = spent/budget*100;
+    if (pct >= 100) return {status:'critical', label: Math.round(pct-100)+'% over'};
+    if (pct >= 90) return {status:'warning', label: Math.round(pct)+'% used'};
+    return {status:'good', label:'On track'};
+  }
+  function renderBudgets(){
+    document.getElementById('budgets-list').innerHTML = DATA.budgets.map(function(b){
+      var st = budgetStatus(b.spent, b.budget);
+      var pct = Math.min(100, Math.round(b.spent/b.budget*100));
+      return '<div class="budget-row clickable row-hover" data-detail="budget" data-id="'+b.id+'">'
+        + '<div class="budget-top"><span class="budget-name">'+b.name+'</span><span class="num budget-amt">'+fmt(b.spent)+' <span class="ink-muted">/ '+fmt(b.budget)+'</span></span></div>'
+        + '<div class="bar-track"><div class="bar-fill '+st.status+'" style="width:'+pct+'%"></div></div>'
+        + '<div class="budget-foot"><span class="pill '+st.status+'">'+st.label+'</span></div></div>';
+    }).join('');
+  }
+
+  /* ---------------- transactions ---------------- */
+  function renderTransactions(){
+    document.getElementById('txn-list').innerHTML = DATA.transactions.map(function(t){
+      return '<div class="txn-row" tabindex="0" role="button" data-detail="transaction" data-id="'+t.id+'" aria-haspopup="dialog">'
+        + mark(t.kind, t.glyph, t.color)
+        + '<div class="txn-mid"><div class="txn-store">'+t.store+'</div><div class="txn-meta"><span class="tag">'+t.category+'</span> '+t.date.replace(', 2026','')+'</div></div>'
+        + '<div class="txn-amt num">'+fmt(t.total)+'</div>'
+        + '<svg class="txn-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></div>';
+    }).join('');
+  }
+
+  /* ---------------- warranties / returns ---------------- */
+  function renderWarranties(){
+    document.getElementById('warranties-count').textContent = DATA.warranties.length + ' tracked';
+    document.getElementById('warranties-list').innerHTML = DATA.warranties.map(function(w){
+      return '<div class="item clickable row-hover" data-detail="warranty" data-id="'+w.id+'"><div class="item-top">'
+        + '<div class="item-top-left">'+mark(w.kind,w.glyph,w.color,null).replace('merchant-mark','merchant-mark sm')
+        + '<div><div class="item-name">'+w.name+'</div><div class="item-sub">'+w.store+' · bought '+w.purchased+'</div></div></div>'
+        + '<span class="pill '+w.status+'">'+w.daysLeft+' days left</span></div>'
+        + '<div class="item-note">Warranty ends <b>'+w.expires+'</b></div></div>';
+    }).join('');
+  }
+  function renderReturns(){
+    document.getElementById('returns-list').innerHTML = DATA.returns.map(function(r){
+      var started = r.returnStatus === 'in_progress';
+      return '<div class="item"><div class="item-top clickable row-hover" data-detail="return" data-id="'+r.id+'" style="flex:1;">'
+        + '<div class="item-top-left">'+mark(r.kind,r.glyph,r.color,null).replace('merchant-mark','merchant-mark sm')
+        + '<div><div class="item-name">'+r.name+'</div><div class="item-sub">'+r.store+' · delivered '+r.delivered.replace(', 2026','')+'</div></div></div>'
+        + '<span class="pill '+r.status+'">'+r.daysLeft+' days left</span></div>'
+        + '<div class="item-note">Return window ends <b>'+r.windowEnds+'</b>'+(started?' · <span style="color:var(--blue); font-weight:600;">Return started</span>':'')+'</div>'
+        + (started ? '' : '<div class="item-actions"><button class="mini-btn solid" data-action="start-return" data-id="'+r.id+'" type="button">Start return</button></div>') + '</div>';
+    }).join('');
+  }
+
+  /* ---------------- loyalty / rewards ---------------- */
+  function renderLoyalty(){
+    document.getElementById('loyalty-list').innerHTML = DATA.loyalty.map(function(l){
+      return '<div class="loy-card clickable row-hover" data-detail="loyalty" data-id="'+l.id+'">'
+        + mark(l.kind,l.glyph,l.color,null).replace('merchant-mark','merchant-mark loy-mark')
+        + '<div class="loy-mid"><div class="loy-name">'+l.name+'</div><div class="loy-tier">'+l.tier+'</div></div>'
+        + '<div class="loy-pts num">'+(l.points!=null?l.points.toLocaleString('en-US'):l.pointsLabel)+(l.points!=null?'<span>'+l.pointsLabel+'</span>':'')+'</div></div>';
+    }).join('');
+  }
+  function renderRewards(){
+    document.getElementById('rewards-list').innerHTML = DATA.rewards.map(function(r){
+      var pct = Math.min(100, Math.round(r.have/r.cost*100));
+      var pillHtml = r.redeemed ? '<span class="pill info">Redeemed</span>' : (r.have>=r.cost ? '<span class="pill good">Ready</span>' : '<span class="reward-meta" style="font-size:11.5px; margin:0">'+(r.cost-r.have)+' points to go</span>');
+      return '<div class="reward clickable row-hover" data-detail="reward" data-id="'+r.id+'">'
+        + '<div class="reward-top"><span class="reward-name">'+r.name+'</span>'+pillHtml+'</div>'
+        + '<div class="reward-track"><div class="reward-fill" style="width:'+pct+'%; background:'+(r.redeemed||r.have>=r.cost?'var(--good)':'var(--blue)')+'"></div></div>'
+        + '<div class="reward-meta num">'+r.have.toLocaleString('en-US')+' / '+r.cost.toLocaleString('en-US')+' points</div></div>';
+    }).join('');
+  }
+
+  /* ---------------- split bills ---------------- */
+  function renderSplitBills(){
+    var owed = DATA.splitBills.filter(function(b){return b.direction==='owed';}).reduce(function(a,b){return a+b.amount;},0);
+    var owe = DATA.splitBills.filter(function(b){return b.direction==='owe' && !b.paid;}).reduce(function(a,b){return a+b.amount;},0);
+    document.getElementById('split-summary').innerHTML = "<span>You're owed <b class=\"good-text\">"+fmt(owed)+"</b></span><span>You owe <b class=\"critical-text\">"+fmt(owe)+"</b></span>";
+    document.getElementById('split-bills-list').innerHTML = DATA.splitBills.map(function(b){
+      if (b.direction==='owed'){
+        return '<div class="bill"><div class="bill-top clickable row-hover" data-detail="split-bill" data-id="'+b.id+'" style="flex:1;">'
+          + '<div><div class="bill-name">'+b.name+'</div><div class="bill-sub">Split with '+b.people+'</div></div>'
+          + '<div class="bill-amt owed num">+'+fmt(b.amount)+'</div></div>'
+          + '<div class="bill-foot"><span class="bill-progress">'+b.paidCount+' of '+b.totalCount+' paid</span>'
+          + '<button class="mini-btn" data-action="remind" data-id="'+b.id+'" type="button">Remind</button></div></div>';
+      }
+      return '<div class="bill"><div class="bill-top clickable row-hover" data-detail="split-bill" data-id="'+b.id+'" style="flex:1;">'
+        + '<div><div class="bill-name">'+b.name+'</div><div class="bill-sub">Split with '+b.people+'</div></div>'
+        + '<div class="bill-amt '+(b.paid?'owed':'owe')+' num">'+(b.paid?'Paid':'−'+fmt(b.amount))+'</div></div>'
+        + '<div class="bill-foot"><span class="bill-progress">Requested '+b.requestedOn.replace(', 2026','')+'</span>'
+        + (b.paid ? '' : '<button class="mini-btn solid" data-action="pay" data-id="'+b.id+'" type="button">Pay now</button>') + '</div></div>';
+    }).join('');
+  }
+
+  /* ---------------- reimbursements ---------------- */
+  function renderReimbursements(){
+    var pillFor = {pending:'warning', approved:'info', reimbursed:'good'};
+    var labelFor = {pending:'Pending', approved:'Approved', reimbursed:'Reimbursed'};
+    document.getElementById('reimbursements-list').innerHTML = DATA.reimbursements.map(function(r){
+      return '<div class="re-row clickable row-hover" data-detail="reimbursement" data-id="'+r.id+'">'
+        + '<div class="re-mid"><div class="re-name">'+r.name+'</div><div class="re-meta">'+r.date.replace(', 2026','')+' · '+r.category+'</div></div>'
+        + '<div class="re-right"><div class="re-amt num">'+fmt(r.amount)+'</div><span class="pill '+pillFor[r.status]+'">'+labelFor[r.status]+'</span></div></div>';
+    }).join('');
+    var pending = DATA.reimbursements.filter(function(r){return r.status==='pending';}).reduce(function(a,r){return a+r.amount;},0);
+    document.getElementById('reimb-total').textContent = fmt(pending);
+  }
+
+  /* ---------------- eco impact ---------------- */
+  function renderEco(){
+    var e = DATA.eco;
+    document.getElementById('eco-stats').innerHTML =
+      '<div class="eco-stat"><b class="num">'+e.receipts+'</b><span>receipts saved</span></div>'
+      + '<div class="eco-stat"><b class="num">'+e.paperLb+' lb</b><span>paper saved</span></div>'
+      + '<div class="eco-stat"><b class="num">'+e.co2Lb+' lb</b><span>CO&#8322; avoided</span></div>';
+  }
+
+  /* ---------------- header / inbox ---------------- */
+  function renderChrome(){
+    document.getElementById('greet-title').textContent = 'Good evening, ' + DATA.meta.greetingName;
+    document.getElementById('month-label').textContent = DATA.meta.month;
+    document.getElementById('inbox-count').textContent = DATA.inbox.newReceipts;
+    document.getElementById('inbox-sub').textContent = DATA.inbox.emailed+' forwarded by email · '+DATA.inbox.scanned+' scanned by camera';
+    document.getElementById('sidebar-eco-count').textContent = DATA.eco.receipts + ' receipts';
+  }
+
+  function renderAll(){
+    renderChrome(); renderStats(); renderCategories(); renderGrocery(); renderTrend();
+    renderBudgets(); renderTransactions(); renderWarranties(); renderReturns();
+    renderLoyalty(); renderRewards(); renderSplitBills(); renderReimbursements(); renderEco();
+  }
+
+  /* ================= detail modal ================= */
+  var overlay = document.getElementById('modal-overlay');
+  var els = {
+    mark: document.getElementById('modal-mark'), store: document.getElementById('modal-store'),
+    meta: document.getElementById('modal-meta'), items: document.getElementById('modal-items'),
+    totalRow: document.getElementById('modal-total-row'), totalLabel: document.getElementById('modal-total-label'),
+    total: document.getElementById('modal-total'), payRow: document.getElementById('modal-pay-row'),
+    pay: document.getElementById('modal-pay'), note: document.getElementById('modal-note'),
+    noteText: document.getElementById('modal-note-text'), actions: document.getElementById('modal-actions'),
+    msgSlot: document.getElementById('modal-msg-slot')
+  };
+  function setMark(kind, glyph, color){
+    els.mark.outerHTML = mark(kind, glyph, color, 'modal-mark');
+    els.mark = document.getElementById('modal-mark');
+  }
+  function row(label, value){
+    return '<div class="modal-item-row"><span>'+label+'</span><span class="num">'+value+'</span></div>';
+  }
+  function showMsg(text, ok){
+    els.msgSlot.innerHTML = '<div class="modal-msg '+(ok?'ok':'err')+'">'+text+'</div>';
+  }
+  function closeModal(){ overlay.classList.remove('open'); els.msgSlot.innerHTML=''; }
+
+  function openDetail(type, id){
+    els.msgSlot.innerHTML = '';
+    els.note.style.display = 'none';
+    els.totalRow.style.display = 'flex';
+    els.payRow.style.display = 'flex';
+    els.actions.innerHTML = '';
+
+    if (type === 'transaction') {
+      var t = DATA.transactions.find(function(x){return x.id===id;});
+      setMark(t.kind, t.glyph, t.color);
+      els.store.textContent = t.store;
+      els.meta.textContent = t.date + ' · ' + t.category;
+      els.items.innerHTML = t.items.map(function(it){ return row(it.n + (it.q?' <span class="modal-item-qty">'+it.q+'</span>':''), fmt(it.p)); }).join('');
+      els.totalLabel.textContent = 'Total paid'; els.total.textContent = fmt(t.total);
+      els.pay.textContent = t.payment;
+      if (t.note) { els.note.style.display = 'flex'; els.noteText.textContent = t.note; }
+      els.actions.innerHTML = '<button class="mini-btn" type="button">View original receipt</button><button class="mini-btn" type="button">Flag an issue</button>';
+
+    } else if (type === 'warranty') {
+      var w = DATA.warranties.find(function(x){return x.id===id;});
+      setMark(w.kind, w.glyph, w.color);
+      els.store.textContent = w.name; els.meta.textContent = w.store;
+      els.items.innerHTML = row('Purchased', w.purchased) + row('Warranty ends', w.expires) + row('Time remaining', w.daysLeft+' days');
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+
+    } else if (type === 'return') {
+      var rt = DATA.returns.find(function(x){return x.id===id;});
+      setMark(rt.kind, rt.glyph, rt.color);
+      els.store.textContent = rt.name; els.meta.textContent = rt.store;
+      var started = rt.returnStatus==='in_progress';
+      els.items.innerHTML = row('Delivered', rt.delivered) + row('Return window ends', rt.windowEnds)
+        + row('Time remaining', rt.daysLeft+' days') + row('Status', started?'Return started':'Not started yet');
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+      els.actions.innerHTML = started
+        ? '<button class="mini-btn" type="button" disabled>Return already started</button>'
+        : '<button class="mini-btn solid" type="button" data-modal-action="start-return" data-id="'+rt.id+'">Start return</button>';
+
+    } else if (type === 'loyalty') {
+      var l = DATA.loyalty.find(function(x){return x.id===id;});
+      setMark(l.kind, l.glyph, l.color);
+      els.store.textContent = l.name; els.meta.textContent = l.tier;
+      els.items.innerHTML = row('Program', l.tier) + row('Balance', l.points!=null ? l.points.toLocaleString('en-US')+' '+l.pointsLabel : l.pointsLabel);
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+      els.actions.innerHTML = '<a class="mini-btn" href="#loyalty" data-modal-action="close">View rewards</a>';
+
+    } else if (type === 'reward') {
+      var rw = DATA.rewards.find(function(x){return x.id===id;});
+      setMark('info', 'info', 'var(--purple)');
+      els.store.textContent = rw.name; els.meta.textContent = 'Loyalty reward';
+      var statusLabel = rw.redeemed ? 'Redeemed' : (rw.have>=rw.cost ? 'Ready to redeem' : (rw.cost-rw.have)+' points to go');
+      els.items.innerHTML = row('Points needed', rw.cost.toLocaleString('en-US')) + row('Your balance', rw.have.toLocaleString('en-US')) + row('Status', statusLabel);
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+      els.actions.innerHTML = (!rw.redeemed && rw.have>=rw.cost)
+        ? '<button class="mini-btn solid" type="button" data-modal-action="redeem" data-id="'+rw.id+'">Redeem now</button>' : '';
+
+    } else if (type === 'budget') {
+      var b = DATA.budgets.find(function(x){return x.id===id;});
+      var st = budgetStatus(b.spent, b.budget);
+      setMark('info', 'info', 'var(--'+st.status+')');
+      els.store.textContent = b.name; els.meta.textContent = 'Monthly budget';
+      var remaining = b.budget - b.spent;
+      els.items.innerHTML = row('Budget', fmt(b.budget)) + row('Spent so far', fmt(b.spent))
+        + row('Remaining', remaining>=0 ? fmt(remaining) : fmt(0)+' (over by '+fmt(-remaining)+')') + row('Status', st.label);
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+
+    } else if (type === 'split-bill') {
+      var sb = DATA.splitBills.find(function(x){return x.id===id;});
+      setMark('info', 'info', sb.direction==='owed' ? 'var(--good)' : 'var(--critical)');
+      els.store.textContent = sb.name; els.meta.textContent = 'Split with ' + sb.people;
+      if (sb.direction==='owed'){
+        els.items.innerHTML = row('Amount owed to you', fmt(sb.amount)) + row('Paid so far', sb.paidCount+' of '+sb.totalCount)
+          + row('Last reminder', sb.lastReminded ? new Date(sb.lastReminded).toLocaleString('en-US') : 'Not sent yet');
+        els.actions.innerHTML = '<button class="mini-btn" type="button" data-modal-action="remind" data-id="'+sb.id+'">Remind everyone</button>';
+      } else {
+        els.items.innerHTML = row('You owe', fmt(sb.amount)) + row('Requested on', sb.requestedOn) + row('Status', sb.paid?'Paid':'Unpaid');
+        els.actions.innerHTML = sb.paid ? '' : '<button class="mini-btn solid" type="button" data-modal-action="pay" data-id="'+sb.id+'">Pay now</button>';
+      }
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+
+    } else if (type === 'reimbursement') {
+      var re = DATA.reimbursements.find(function(x){return x.id===id;});
+      setMark('info', 'info', 'var(--blue)');
+      els.store.textContent = re.name; els.meta.textContent = re.date;
+      els.items.innerHTML = row('Category', re.category) + row('Date', re.date) + row('Status', re.status.charAt(0).toUpperCase()+re.status.slice(1));
+      els.totalLabel.textContent = 'Amount'; els.total.textContent = fmt(re.amount);
+      els.payRow.style.display='none';
+
+    } else if (type === 'eco') {
+      var e = DATA.eco;
+      setMark('info', 'info', 'var(--good)');
+      els.store.textContent = 'Your paperless impact'; els.meta.textContent = DATA.meta.month;
+      els.items.innerHTML = row('Receipts gone paperless', e.receipts) + row('Paper saved', e.paperLb+' lb') + row('CO&#8322; avoided', e.co2Lb+' lb');
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+
+    } else if (type === 'add-receipt') {
+      setMark('info', 'plus', 'var(--pink)');
+      els.store.textContent = 'Add a receipt'; els.meta.textContent = 'Manually log a purchase';
+      els.items.innerHTML =
+        '<div class="modal-field"><label for="f-store">Store</label><input id="f-store" type="text" placeholder="e.g. Whole Foods"></div>'
+        + '<div class="modal-field"><label for="f-category">Category</label><input id="f-category" type="text" placeholder="e.g. Groceries"></div>'
+        + '<div class="modal-field"><label for="f-total">Total ($)</label><input id="f-total" type="number" step="0.01" min="0" placeholder="0.00"></div>';
+      els.totalRow.style.display='none'; els.payRow.style.display='none';
+      els.actions.innerHTML = '<button class="mini-btn solid" type="button" data-modal-action="add-receipt">Add receipt</button>';
+    }
+
+    overlay.classList.add('open');
+  }
+
+  document.addEventListener('click', function(e){
+    var d = e.target.closest('[data-detail]');
+    if (d) { openDetail(d.getAttribute('data-detail'), d.getAttribute('data-id')); return; }
+
+    var act = e.target.closest('[data-action]');
+    if (act) { e.stopPropagation(); handleAction(act.getAttribute('data-action'), act.getAttribute('data-id'), act); return; }
+
+    var ma = e.target.closest('[data-modal-action]');
+    if (ma) {
+      var kind = ma.getAttribute('data-modal-action');
+      if (kind === 'close') { closeModal(); return; }
+      e.preventDefault();
+      handleModalAction(kind, ma.getAttribute('data-id'));
+      return;
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key==='Enter' || e.key===' ') {
+      var d = e.target.closest && e.target.closest('[data-detail].clickable');
+      if (d && document.activeElement===d) { e.preventDefault(); openDetail(d.getAttribute('data-detail'), d.getAttribute('data-id')); }
+    }
+    if (e.key === 'Escape') closeModal();
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if (e.target===overlay) closeModal(); });
+
+  function handleAction(action, id){
+    if (action === 'start-return') return startReturn(id);
+    if (action === 'remind') return remindBill(id);
+    if (action === 'pay') return payBill(id);
+  }
+  function handleModalAction(action, id){
+    if (action === 'start-return') return startReturn(id, true);
+    if (action === 'remind') return remindBill(id, true);
+    if (action === 'pay') return payBill(id, true);
+    if (action === 'redeem') return redeemReward(id, true);
+    if (action === 'add-receipt') return addReceipt();
+  }
+
+  function startReturn(id, inModal){
+    api('/api/returns/'+id+'/start', {method:'POST'}).then(function(res){
+      if (!res.ok) { if(inModal) showMsg(res.body.error||'Could not start return', false); return; }
+      var idx = DATA.returns.findIndex(function(x){return x.id===id;});
+      DATA.returns[idx] = res.body;
+      renderReturns();
+      if (inModal) { showMsg('Return started — a prepaid label has been emailed to you.', true); openDetail('return', id); }
+    });
+  }
+  function remindBill(id, inModal){
+    api('/api/split-bills/'+id+'/remind', {method:'POST'}).then(function(res){
+      if (!res.ok) { if(inModal) showMsg(res.body.error||'Could not send reminder', false); return; }
+      var idx = DATA.splitBills.findIndex(function(x){return x.id===id;});
+      DATA.splitBills[idx] = res.body;
+      renderSplitBills();
+      if (inModal) { showMsg('Reminder sent to everyone on this bill.', true); openDetail('split-bill', id); }
+    });
+  }
+  function payBill(id, inModal){
+    api('/api/split-bills/'+id+'/pay', {method:'POST'}).then(function(res){
+      if (!res.ok) { if(inModal) showMsg(res.body.error||'Could not process payment', false); return; }
+      var idx = DATA.splitBills.findIndex(function(x){return x.id===id;});
+      DATA.splitBills[idx] = res.body;
+      renderSplitBills();
+      if (inModal) { showMsg('Payment sent.', true); openDetail('split-bill', id); }
+    });
+  }
+  function redeemReward(id, inModal){
+    api('/api/rewards/'+id+'/redeem', {method:'POST'}).then(function(res){
+      if (!res.ok) { showMsg(res.body.error||'Could not redeem reward', false); return; }
+      var idx = DATA.rewards.findIndex(function(x){return x.id===id;});
+      DATA.rewards[idx] = res.body.reward;
+      if (res.body.loyalty){
+        var lidx = DATA.loyalty.findIndex(function(x){return x.id===res.body.loyalty.id;});
+        if (lidx>-1) DATA.loyalty[lidx] = res.body.loyalty;
+      }
+      renderRewards(); renderLoyalty();
+      showMsg('Reward redeemed! Check your account in a few minutes.', true);
+      openDetail('reward', id);
+    });
+  }
+  function addReceipt(){
+    var store = document.getElementById('f-store').value.trim();
+    var category = document.getElementById('f-category').value.trim();
+    var total = parseFloat(document.getElementById('f-total').value);
+    if (!store || !category || !total || total<=0){ showMsg('Fill in store, category and a total greater than $0.', false); return; }
+    api('/api/receipts', {method:'POST', body: JSON.stringify({store:store, category:category, total:total})}).then(function(res){
+      if (!res.ok) { showMsg(res.body.error||'Could not add receipt', false); return; }
+      DATA.transactions.unshift(res.body);
+      DATA.inbox.newReceipts = Math.max(0, DATA.inbox.newReceipts - 1);
+      renderTransactions(); renderChrome();
+      showMsg('Receipt added to your transactions.', true);
+      setTimeout(closeModal, 900);
+    });
+  }
+
+  document.getElementById('btn-add-receipt').addEventListener('click', function(){ openDetail('add-receipt'); });
+  document.getElementById('eco-card').addEventListener('click', function(){ openDetail('eco'); });
+  document.getElementById('sidebar-eco').addEventListener('click', function(){ openDetail('eco'); });
+
+  /* ---------------- personal / business toggle ---------------- */
   var btnP = document.getElementById('tab-personal');
   var btnB = document.getElementById('tab-business');
   function setMode(mode){
-    renderStats(mode); renderCategories(mode); renderTrend(mode);
+    MODE = mode;
+    renderStats(); renderCategories(); renderTrend();
     btnP.classList.toggle('active', mode==='personal');
     btnB.classList.toggle('active', mode==='business');
     btnP.setAttribute('aria-selected', mode==='personal');
@@ -970,13 +1174,50 @@
   }
   btnP.addEventListener('click', function(){ setMode('personal'); });
   btnB.addEventListener('click', function(){ setMode('business'); });
-  setMode('personal');
 
+  /* ---------------- AI ask (canned, plain-language answers over live data) ---------------- */
+  var ANSWERS = [
+    { q:/spend more|spending more|why.*more/i, a: function(){
+        var over = DATA.budgets.filter(function(b){return b.spent>b.budget;});
+        return "You're over budget on " + over.map(function(b){return b.name.toLowerCase();}).join(' and ') + " this month — dining out is " +
+          Math.round((over[0].spent/over[0].budget-1)*100) + "% over, mostly from DoorDash orders.";
+      }},
+    { q:/expir|closing|warrant|return/i, a: function(){
+        var w = DATA.warranties.slice().sort(function(a,b){return a.daysLeft-b.daysLeft;})[0];
+        var r = DATA.returns.slice().sort(function(a,b){return a.daysLeft-b.daysLeft;})[0];
+        return "Your " + w.name + " warranty (" + w.store + ") closes in " + w.daysLeft + " days, and your " + r.name + " return window (" + r.store + ") closes in " + r.daysLeft + " days.";
+      }},
+    { q:/saved|savings|this year/i, a: function(){
+        return "You've saved " + fmt(DATA.personal.stats.saved) + " via cashback this month, plus " + DATA.rewards.filter(function(r){return r.have>=r.cost && !r.redeemed;}).length + " loyalty rewards worth redeeming right now.";
+      }}
+  ];
+  function askAI(text){
+    var box = document.getElementById('ai-answer');
+    var hit = ANSWERS.find(function(a){ return a.q.test(text); });
+    box.textContent = hit ? hit.a() : "I can help with spending trends, budgets, warranties, returns and rewards — try one of the suggested questions below.";
+    box.style.display = 'block';
+  }
+  document.getElementById('ai-ask-btn').addEventListener('click', function(){
+    askAI(document.getElementById('ai-ask-input').value);
+  });
+  document.getElementById('ai-ask-input').addEventListener('keydown', function(e){
+    if (e.key==='Enter') askAI(e.target.value);
+  });
   document.querySelectorAll('.ai-chip').forEach(function(chip){
     chip.addEventListener('click', function(){
-      var input = document.getElementById('ai-ask-input');
-      input.value = chip.textContent; input.focus();
+      document.getElementById('ai-ask-input').value = chip.textContent;
+      askAI(chip.textContent);
     });
+  });
+
+  /* ---------------- boot ---------------- */
+  fetch('/api/data').then(function(r){ return r.json(); }).then(function(json){
+    DATA = json;
+    renderAll();
+    wireTrendHover();
+  }).catch(function(){
+    document.querySelector('.main').insertAdjacentHTML('afterbegin',
+      '<div class="card" style="border-color:var(--critical)"><b style="color:var(--critical)">Could not reach the Receitly backend.</b> Start it with <code>node server.js</code> and reload this page.</div>');
   });
 })();
 </script>
